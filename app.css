@@ -1,0 +1,255 @@
+
+        :root {
+            --brand-accent: #4FD1C5;
+        }
+
+        body {
+            background-color: #0f0f11;
+            color: #e0e0e0;
+            user-select: none;
+        }
+
+        .glass {
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-btn.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .img-fit {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .env-btn {
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .env-btn.active {
+            background: var(--brand-accent);
+            color: black;
+            border-color: var(--brand-accent);
+            font-weight: bold;
+        }
+
+        .mode-btn {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .mode-btn:hover {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mode-btn.active {
+            background: white;
+            color: black;
+            border-color: white;
+        }
+
+        .rot-180 {
+            transform: rotate(180deg);
+        }
+
+        #context-menu {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            min-width: 180px;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            padding: 6px;
+            overflow: hidden;
+        }
+
+        .menu-item {
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .menu-item i {
+            font-size: 16px;
+            color: var(--brand-accent);
+        }
+
+        /* PREMIUM ANIMATIONS */
+        @keyframes reveal {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-reveal {
+            animation: reveal 0.3s ease-out both;
+            will-change: transform, opacity;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform;
+        }
+
+        img {
+            -webkit-user-drag: none;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+
+
+        .card-hover:hover {
+            transform: scale(1.03) translateY(-5px);
+            box-shadow: 0 0 15px -2px var(--brand-accent);
+            border-color: var(--brand-accent);
+            z-index: 50;
+            position: relative;
+            /* Ensure z-index applies */
+        }
+
+        @keyframes starPop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.4) rotate(15deg);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .star-pop {
+            animation: starPop 0.3s ease-out;
+        }
+
+        @keyframes pulse-accent {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+                box-shadow: 0 0 15px var(--brand-accent);
+            }
+        }
+
+        .stats-pulse {
+            animation: pulse-accent 2s infinite ease-in-out;
+        }
+
+        #content {
+            scroll-behavior: smooth;
+            overflow-y: auto;
+        }
+
+        #content::-webkit-scrollbar {
+            width: 16px;
+        }
+
+        #content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        #content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            border: 2px solid transparent;
+            /* Small border for contrast if needed */
+            background-clip: content-box;
+            /* Ensures thumb fills the width better */
+        }
+
+        #content::-webkit-scrollbar-thumb:hover {
+            background: var(--brand-accent);
+            background-clip: content-box;
+        }
+
+        #content>* {
+            transition: opacity 0.3s ease;
+        }
+
+        .pill-bg {
+            position: absolute;
+            background: var(--brand-color, #4FD1C5);
+            border-radius: 9999px;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 5;
+            opacity: 0.15;
+        }
+
+        .active-pill-text {
+            color: black !important;
+        }
+
+        .active-accent-text {
+            color: var(--brand-accent) !important;
+        }
+
+        .active-nav {
+            color: white !important;
+        }
+
+        @keyframes gear-spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    

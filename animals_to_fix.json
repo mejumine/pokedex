@@ -1,0 +1,607 @@
+[
+  {
+    "num": "#001",
+    "name": "Chien",
+    "id": "dex_1"
+  },
+  {
+    "num": "#005",
+    "name": "Cochon d'Inde",
+    "id": "dex_5"
+  },
+  {
+    "num": "#006",
+    "name": "Vache",
+    "id": "dex_6"
+  },
+  {
+    "num": "#007",
+    "name": "Taureau",
+    "id": "dex_7"
+  },
+  {
+    "num": "#008",
+    "name": "Cheval",
+    "id": "dex_8"
+  },
+  {
+    "num": "#009",
+    "name": "Poney",
+    "id": "dex_9"
+  },
+  {
+    "num": "#010",
+    "name": "Âne",
+    "id": "dex_10"
+  },
+  {
+    "num": "#013",
+    "name": "Chèvre",
+    "id": "dex_13"
+  },
+  {
+    "num": "#014",
+    "name": "Poule",
+    "id": "dex_14"
+  },
+  {
+    "num": "#015",
+    "name": "Coq",
+    "id": "dex_15"
+  },
+  {
+    "num": "#016",
+    "name": "Canard",
+    "id": "dex_16"
+  },
+  {
+    "num": "#023",
+    "name": "Sanglier",
+    "id": "dex_23"
+  },
+  {
+    "num": "#024",
+    "name": "Cerf",
+    "id": "dex_24"
+  },
+  {
+    "num": "#025",
+    "name": "Biche",
+    "id": "dex_25"
+  },
+  {
+    "num": "#040",
+    "name": "Blaireau",
+    "id": "dex_40"
+  },
+  {
+    "num": "#048",
+    "name": "Chauve-souris",
+    "id": "dex_48"
+  },
+  {
+    "num": "#057",
+    "name": "Fennec",
+    "id": "dex_57"
+  },
+  {
+    "num": "#074",
+    "name": "Antilope",
+    "id": "dex_74"
+  },
+  {
+    "num": "#099",
+    "name": "Pigeon",
+    "id": "dex_99"
+  },
+  {
+    "num": "#093",
+    "name": "Loup arctique",
+    "id": "dex_93"
+  },
+  {
+    "num": "#101",
+    "name": "Merle",
+    "id": "dex_101"
+  },
+  {
+    "num": "#102",
+    "name": "Pie",
+    "id": "dex_102"
+  },
+  {
+    "num": "#105",
+    "name": "Corbeau",
+    "id": "dex_105"
+  },
+  {
+    "num": "#104",
+    "name": "Hirondelle",
+    "id": "dex_104"
+  },
+  {
+    "num": "#108",
+    "name": "Hibou",
+    "id": "dex_108"
+  },
+  {
+    "num": "#111",
+    "name": "Faucon",
+    "id": "dex_111"
+  },
+  {
+    "num": "#112",
+    "name": "Goéland",
+    "id": "dex_112"
+  },
+  {
+    "num": "#114",
+    "name": "Pic-vert",
+    "id": "dex_114"
+  },
+  {
+    "num": "#125",
+    "name": "Perruche",
+    "id": "dex_125"
+  },
+  {
+    "num": "#194",
+    "name": "Moustique",
+    "id": "dex_194"
+  },
+  {
+    "num": "#187",
+    "name": "Papillon",
+    "id": "dex_187"
+  },
+  {
+    "num": "#201",
+    "name": "Criquet",
+    "id": "dex_201"
+  },
+  {
+    "num": "#231",
+    "name": "Pieuvre",
+    "id": "dex_231"
+  },
+  {
+    "num": "#221",
+    "name": "Requin",
+    "id": "dex_221"
+  },
+  {
+    "num": "#301",
+    "name": "Léopard",
+    "id": "dex_301"
+  },
+  {
+    "num": "#240",
+    "name": "Murène",
+    "id": "dex_240"
+  },
+  {
+    "num": "#303",
+    "name": "Rhinocéros",
+    "id": "dex_303"
+  },
+  {
+    "num": "#305",
+    "name": "Kangourou",
+    "id": "dex_305"
+  },
+  {
+    "num": "#306",
+    "name": "Ours polaire",
+    "id": "dex_306"
+  },
+  {
+    "num": "#310",
+    "name": "Toucan",
+    "id": "dex_310"
+  },
+  {
+    "num": "#311",
+    "name": "Colibri",
+    "id": "dex_311"
+  },
+  {
+    "num": "#309",
+    "name": "Perroquet",
+    "id": "dex_309"
+  },
+  {
+    "num": "#313",
+    "name": "Requin marteau",
+    "id": "dex_313"
+  },
+  {
+    "num": "#316",
+    "name": "Espadon",
+    "id": "dex_316"
+  },
+  {
+    "num": "#318",
+    "name": "Étoile de mer",
+    "id": "dex_318"
+  },
+  {
+    "num": "#319",
+    "name": "Méduse",
+    "id": "dex_319"
+  },
+  {
+    "num": "#320",
+    "name": "Crabe",
+    "id": "dex_320"
+  },
+  {
+    "num": "#321",
+    "name": "Coccinelle",
+    "id": "dex_321"
+  },
+  {
+    "num": "#322",
+    "name": "Scarabée",
+    "id": "dex_322"
+  },
+  {
+    "num": "#327",
+    "name": "Ornithorynque",
+    "id": "dex_327"
+  },
+  {
+    "num": "#330",
+    "name": "Crocodile",
+    "id": "dex_330"
+  },
+  {
+    "num": "#333",
+    "name": "Tapir",
+    "id": "dex_333"
+  },
+  {
+    "num": "#336",
+    "name": "Mouette",
+    "id": "dex_336"
+  },
+  {
+    "num": "#344",
+    "name": "Bourdon",
+    "id": "dex_344"
+  },
+  {
+    "num": "#346",
+    "name": "Mouche",
+    "id": "dex_346"
+  },
+  {
+    "num": "#347",
+    "name": "Araignée",
+    "id": "dex_347"
+  },
+  {
+    "num": "#349",
+    "name": "Scorpion",
+    "id": "dex_349"
+  },
+  {
+    "num": "#351",
+    "name": "Cachalot",
+    "id": "dex_351"
+  },
+  {
+    "num": "#354",
+    "name": "Beluga",
+    "id": "dex_354"
+  },
+  {
+    "num": "#353",
+    "name": "Narval",
+    "id": "dex_353"
+  },
+  {
+    "num": "#355",
+    "name": "Thon",
+    "id": "dex_355"
+  },
+  {
+    "num": "#357",
+    "name": "Python",
+    "id": "dex_357"
+  },
+  {
+    "num": "#356",
+    "name": "Saumon",
+    "id": "dex_356"
+  },
+  {
+    "num": "#360",
+    "name": "Dragon de Komodo",
+    "id": "dex_360"
+  },
+  {
+    "num": "#362",
+    "name": "Élan",
+    "id": "dex_362"
+  },
+  {
+    "num": "#364",
+    "name": "Gazelle",
+    "id": "dex_364"
+  },
+  {
+    "num": "#365",
+    "name": "Impala",
+    "id": "dex_365"
+  },
+  {
+    "num": "#367",
+    "name": "Zèbre de Grévy",
+    "id": "dex_367"
+  },
+  {
+    "num": "#366",
+    "name": "Okapi",
+    "id": "dex_366"
+  },
+  {
+    "num": "#369",
+    "name": "Mangouste",
+    "id": "dex_369"
+  },
+  {
+    "num": "#368",
+    "name": "Phacochère",
+    "id": "dex_368"
+  },
+  {
+    "num": "#370",
+    "name": "Serval",
+    "id": "dex_370"
+  },
+  {
+    "num": "#376",
+    "name": "Ibis",
+    "id": "dex_376"
+  },
+  {
+    "num": "#377",
+    "name": "Spatule",
+    "id": "dex_377"
+  },
+  {
+    "num": "#379",
+    "name": "Cormoran",
+    "id": "dex_379"
+  },
+  {
+    "num": "#385",
+    "name": "Brochet",
+    "id": "dex_385"
+  },
+  {
+    "num": "#363",
+    "name": "Renne",
+    "id": "dex_363"
+  },
+  {
+    "num": "#386",
+    "name": "Silure",
+    "id": "dex_386"
+  },
+  {
+    "num": "#387",
+    "name": "Poisson rouge",
+    "id": "dex_387"
+  },
+  {
+    "num": "#388",
+    "name": "Combattant",
+    "id": "dex_388"
+  },
+  {
+    "num": "#389",
+    "name": "Guppy",
+    "id": "dex_389"
+  },
+  {
+    "num": "#397",
+    "name": "Taon",
+    "id": "dex_397"
+  },
+  {
+    "num": "#401",
+    "name": "Mille-pattes",
+    "id": "dex_401"
+  },
+  {
+    "num": "#402",
+    "name": "Scolopendre",
+    "id": "dex_402"
+  },
+  {
+    "num": "#406",
+    "name": "Pinson",
+    "id": "dex_406"
+  },
+  {
+    "num": "#404",
+    "name": "Bouvreuil",
+    "id": "dex_404"
+  },
+  {
+    "num": "#408",
+    "name": "Tourterelle",
+    "id": "dex_408"
+  },
+  {
+    "num": "#412",
+    "name": "Sittelle",
+    "id": "dex_412"
+  },
+  {
+    "num": "#414",
+    "name": "Bergeronnette",
+    "id": "dex_414"
+  },
+  {
+    "num": "#415",
+    "name": "Étourneau",
+    "id": "dex_415"
+  },
+  {
+    "num": "#420",
+    "name": "Kiwi",
+    "id": "dex_420"
+  },
+  {
+    "num": "#425",
+    "name": "Balbuzard",
+    "id": "dex_425"
+  },
+  {
+    "num": "#426",
+    "name": "Gypaète",
+    "id": "dex_426"
+  },
+  {
+    "num": "#434",
+    "name": "Protée",
+    "id": "dex_434"
+  },
+  {
+    "num": "#433",
+    "name": "Cécilie",
+    "id": "dex_433"
+  },
+  {
+    "num": "#435",
+    "name": "Salamandre géante",
+    "id": "dex_435"
+  },
+  {
+    "num": "#436",
+    "name": "Grenouille taureau",
+    "id": "dex_436"
+  },
+  {
+    "num": "#437",
+    "name": "Alyte accoucheur",
+    "id": "dex_437"
+  },
+  {
+    "num": "#438",
+    "name": "Sonneur",
+    "id": "dex_438"
+  },
+  {
+    "num": "#439",
+    "name": "Pipa pipa",
+    "id": "dex_439"
+  },
+  {
+    "num": "#440",
+    "name": "Grenouille de verre",
+    "id": "dex_440"
+  },
+  {
+    "num": "#445",
+    "name": "Monstre de Gila",
+    "id": "dex_445"
+  },
+  {
+    "num": "#449",
+    "name": "Vipère heurtante",
+    "id": "dex_449"
+  },
+  {
+    "num": "#447",
+    "name": "Tortue alligator",
+    "id": "dex_447"
+  },
+  {
+    "num": "#450",
+    "name": "Serpent corail",
+    "id": "dex_450"
+  },
+  {
+    "num": "#451",
+    "name": "Anolis",
+    "id": "dex_451"
+  },
+  {
+    "num": "#452",
+    "name": "Tortue luth",
+    "id": "dex_452"
+  },
+  {
+    "num": "#453",
+    "name": "Tortue de Floride",
+    "id": "dex_453"
+  },
+  {
+    "num": "#454",
+    "name": "Gecko à crête",
+    "id": "dex_454"
+  },
+  {
+    "num": "#471",
+    "name": "Pou",
+    "id": "dex_471"
+  },
+  {
+    "num": "#478",
+    "name": "Salamandre tachetée",
+    "id": "dex_478"
+  },
+  {
+    "num": "#477",
+    "name": "Couleuvre à collier",
+    "id": "dex_477"
+  },
+  {
+    "num": "#479",
+    "name": "Triton",
+    "id": "dex_479"
+  },
+  {
+    "num": "#480",
+    "name": "Rat brun",
+    "id": "dex_480"
+  },
+  {
+    "num": "#481",
+    "name": "Souris grise",
+    "id": "dex_481"
+  },
+  {
+    "num": "#482",
+    "name": "Musaraigne",
+    "id": "dex_482"
+  },
+  {
+    "num": "#483",
+    "name": "Fouine",
+    "id": "dex_483"
+  },
+  {
+    "num": "#484",
+    "name": "Loir",
+    "id": "dex_484"
+  },
+  {
+    "num": "#485",
+    "name": "Escargot",
+    "id": "dex_485"
+  },
+  {
+    "num": "#486",
+    "name": "Limace",
+    "id": "dex_486"
+  },
+  {
+    "num": "#487",
+    "name": "Ver de terre",
+    "id": "dex_487"
+  }
+]

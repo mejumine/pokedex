@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LumenDex - V1 Interactive</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: { 900: '#121212', 800: '#1e1e1e', },
+                        brand: { gold: '#FFD700', accent: '#4FD1C5', error: '#FF6B6B' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], outfit: ['Outfit', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <link rel="stylesheet" href="app.css">
+</head>
+
+<body class="h-screen w-screen flex overflow-hidden text-gray-100 font-sans">
+
+    <datalist id="all-animals-list"></datalist>
+
+    <!-- SIDEBAR -->
+    <aside class="w-72 h-full glass border-r border-white/5 flex flex-col z-20 shrink-0">
+        <div class="p-8 cursor-pointer group" onclick="ui.updateTheme(null)">
+            <h1 class="font-outfit text-3xl font-extrabold flex items-center gap-3 text-white">
+                <i class="ph-fill ph-aperture text-brand-accent group-hover:animate-spin"></i> pokedex
+            </h1>
+            <p class="text-xs text-brand-accent mt-2 uppercase tracking-widest font-bold pl-1">Photo Utility</p>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2 flex flex-col h-full overflow-hidden relative">
+            <div id="nav-pill" class="pill-bg"></div>
+            <button id="nav-pokedex" onclick="router.go('index')"
+                class="nav-btn w-full p-4 rounded-2xl text-left text-gray-400 flex items-center gap-4 hover:bg-white/5 hover:text-white transition-all relative z-10">
+                <i class="ph ph-grid-four text-2xl"></i>
+                <div class="font-bold text-sm">Pokedex</div>
+            </button>
+            <button id="nav-gallery" onclick="router.go('gallery')"
+                class="nav-btn w-full p-4 rounded-2xl text-left text-gray-400 flex items-center gap-4 hover:bg-white/5 hover:text-white transition-all relative z-10">
+                <i class="ph ph-image-square text-2xl"></i>
+                <span class="font-bold text-sm">Galerie</span>
+            </button>
+            <button id="nav-fav" onclick="router.go('favs')"
+                class="nav-btn w-full p-4 rounded-2xl text-left text-gray-400 flex items-center gap-4 hover:bg-white/5 hover:text-white transition-all relative z-10">
+                <i class="ph-fill ph-heart text-2xl"></i>
+                <span class="font-bold text-sm">Favoris</span>
+            </button>
+            <button id="nav-badges" onclick="router.go('badges')"
+                class="nav-btn w-full p-4 rounded-2xl text-left text-gray-400 flex items-center gap-4 hover:bg-white/5 hover:text-white transition-all relative z-10">
+                <i class="ph ph-certificate text-2xl"></i>
+                <span class="font-bold text-sm">Badges</span>
+            </button>
+
+            <div class="mt-auto pt-6 border-t border-white/5 space-y-1">
+                <button onclick="io.export()"
+                    class="nav-btn w-full p-2 rounded-xl text-left text-gray-500 flex items-center gap-3 hover:text-white text-xs font-bold">
+                    <i class="ph-bold ph-export"></i> Exporter
+                </button>
+                <button onclick="io.import()"
+                    class="nav-btn w-full p-2 rounded-xl text-left text-gray-500 flex items-center gap-3 hover:text-white text-xs font-bold">
+                    <i class="ph-bold ph-download-simple"></i> Importer
+                </button>
+                <button onclick="ui.resetData()"
+                    class="nav-btn w-full p-2 rounded-xl text-left text-gray-500 flex items-center gap-3 hover:text-red-400 text-xs font-bold">
+                    <i class="ph-bold ph-trash"></i> Reset Data
+                </button>
+            </div>
+
+            <div class="pb-6 space-y-4 mt-4">
+                <div class="px-2">
+                    <button onclick="app.onlyUnlocked=!app.onlyUnlocked; render()"
+                        class="w-full flex items-center justify-between p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all group">
+                        <span class="text-xs font-bold text-gray-300 group-hover:text-white">Mes Pokemons</span>
+                        <div id="toggle-unlocked"
+                            class="w-8 h-4 rounded-full bg-gray-600 relative transition-colors duration-200">
+                            <div
+                                class="absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full transition-transform duration-200 translate-x-0">
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="px-2">
+                    <div class="flex bg-black/40 p-1 rounded-lg border border-white/5 relative">
+                        <div id="mode-pill" class="pill-bg"></div>
+                        <button onclick="setMode('normal')" id="btn-mode-normal"
+                            class="flex-1 text-[10px] uppercase font-bold py-1.5 rounded relative z-10 transition-colors">Tout</button>
+                        <button onclick="setMode('zoo')" id="btn-mode-zoo"
+                            class="flex-1 text-[10px] uppercase font-bold py-1.5 rounded relative z-10 transition-colors text-gray-500">Zoo</button>
+                        <button onclick="setMode('sauvage')" id="btn-mode-sauvage"
+                            class="flex-1 text-[10px] uppercase font-bold py-1.5 rounded relative z-10 transition-colors text-gray-500">Sauvage</button>
+                    </div>
+                </div>
+                <div class="bg-gray-800/50 rounded-2xl p-5 border border-white/5 mx-2">
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="text-gray-400 text-[10px] font-bold uppercase transition-all"
+                            id="stats-label">Progression (<span id="stats-mode">Tout</span>)</span>
+                        <span id="stats-txt" class="text-brand-accent font-mono font-bold text-lg">0 / 0</span>
+                    </div>
+                    <div class="h-2 bg-gray-700/50 rounded-full overflow-hidden">
+                        <div id="stats-bar" class="h-full bg-brand-accent w-0 transition-all duration-1000"></div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col relative bg-gradient-to-br from-dark-900 to-black overflow-hidden">
+        <header class="h-24 shrink-0 px-8 flex flex-col justify-center glass z-10 w-full overflow-hidden space-y-2">
+            <div class="flex items-center justify-between w-full">
+                <div class="flex items-center gap-4">
+                    <h2 id="page-title" class="text-2xl font-outfit font-bold whitespace-nowrap">Pokedex</h2>
+                    <div class="relative group">
+                        <i
+                            class="ph-bold ph-magnifying-glass absolute left-3 top-1.5 text-gray-500 group-focus-within:text-brand-accent"></i>
+                        <input type="text" id="search-input" oninput="window.setSearch(this.value)"
+                            placeholder="Rechercher..."
+                            class="bg-black/30 border border-white/10 rounded-full pl-9 pr-4 py-1.5 text-sm w-48 focus:w-64 focus:bg-black/50 focus:border-brand-accent transition-all outline-none text-white">
+                    </div>
+                </div>
+                <div class="flex gap-3 items-center">
+                    <div id="pokedex-sort"
+                        class="flex items-center bg-black/30 rounded-full p-1 border border-white/10 shrink-0 relative">
+                        <div id="dex-sort-pill" class="pill-bg"></div>
+                        <button onclick="window.sortDex('name')" id="btn-dex-name"
+                            class="px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors">Nom</button>
+                        <button onclick="window.sortDex('weight')" id="btn-dex-weight"
+                            class="px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">Poids</button>
+                        <button onclick="window.sortDex('size')" id="btn-dex-size"
+                            class="px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">Taille</button>
+                        <button onclick="window.sortDex('rarity')" id="btn-dex-rarity"
+                            class="px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">Rareté</button>
+                    </div>
+                    <div id="sort-controls"
+                        class="hidden items-center bg-black/30 rounded-full p-1 border border-white/10 shrink-0 relative">
+                        <div id="gal-sort-pill" class="pill-bg"></div>
+                        <button onclick="window.sort('date')" id="btn-sort-date"
+                            class="px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors">Par Date</button>
+                        <button onclick="window.sort('rating')" id="btn-sort-rating"
+                            class="px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">Par Note</button>
+                    </div>
+                    <div id="global-sort-dir-wrapper">
+                        <button onclick="window.toggleSortDir()" id="btn-sort-dir"
+                            class="w-8 h-8 rounded-full bg-black/30 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all active:scale-95"
+                            title="Inverser le tri">
+                            <i class="ph-bold ph-arrow-down text-lg transition-transform duration-300 transform btn-sort-dir-icon"></i>
+                        </button>
+                        <button id="dev-commit-btn" onclick="ui.commitToDatabase()" class="hidden w-8 h-8 rounded-full bg-brand-accent/20 border border-brand-accent/50 flex items-center justify-center text-brand-accent hover:bg-brand-accent hover:text-black transition-all active:scale-95" title="Enregistrer dans database.js">
+                            <i class="ph-bold ph-floppy-disk"></i>
+                        </button>
+                        <button id="dev-commit-btn" onclick="ui.commitToDatabase()" class="hidden w-8 h-8 rounded-full bg-brand-accent/20 border border-brand-accent/50 flex items-center justify-center text-brand-accent hover:bg-brand-accent hover:text-black transition-all active:scale-95" title="Enregistrer dans database.js">
+                            <i class="ph-bold ph-floppy-disk"></i>
+                        </button>
+                    </div>
+                    <button onclick="ui.openImporter()"
+                        class="bg-white hover:bg-gray-200 active:scale-95 transition-all text-black px-6 py-2.5 rounded-full font-bold flex items-center gap-2 shadow-lg shrink-0">
+                        <i class="ph-bold ph-plus"></i> <span class="hidden sm:inline">Importer</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div id="content" class="flex-1 overflow-y-auto p-6 hide-scroll relative pb-32"></div>
+
+        <div id="filters"
+            class="absolute bottom-6 left-1/2 -translate-x-1/2 glass p-1.5 rounded-full flex gap-1 shadow-2xl z-20 overflow-x-auto max-w-[90vw]">
+            <div id="filter-pill" class="pill-bg"></div>
+            <button onclick="setFilter('all')" id="f-btn-all"
+                class="f-btn active px-4 py-2 rounded-full text-xs font-bold relative z-10 transition-colors">TOUT</button>
+            <button onclick="setFilter('mammal')" id="f-btn-mammal"
+                class="f-btn px-4 py-2 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">MAMMIFÈRES</button>
+            <button onclick="setFilter('bird')" id="f-btn-bird"
+                class="f-btn px-4 py-2 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">OISEAUX</button>
+            <button onclick="setFilter('reptile')" id="f-btn-reptile"
+                class="f-btn px-4 py-2 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">REPTILES</button>
+            <button onclick="setFilter('amphibian')" id="f-btn-amphibian"
+                class="f-btn px-4 py-2 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">AMPHIBIENS</button>
+            <button onclick="setFilter('insect')" id="f-btn-insect"
+                class="f-btn px-4 py-2 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">INSECTES</button>
+        </div>
+    </main>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox" class="fixed inset-0 z-[60] bg-black/95 hidden flex flex-col">
+        <div
+            class="h-16 flex justify-between items-center px-6 shrink-0 absolute top-0 inset-x-0 bg-gradient-to-b from-black/80 to-transparent z-50">
+            <div class="text-white font-bold" id="lb-counter">1 / 10</div>
+            <div class="flex gap-4">
+                <button onclick="lb.openFolder()"
+                    class="text-2xl transition-all hover:text-brand-gold active:scale-95 text-gray-400"
+                    title="Ouvrir fichier source (Info)"><i class="ph-bold ph-folder-open"></i></button>
+                <button onclick="lb.download()"
+                    class="text-2xl transition-all hover:text-brand-accent active:scale-95 text-gray-400"
+                    title="Sauvegarder"><i class="ph-bold ph-download-simple"></i></button>
+                <button onclick="lb.toggleFav()" id="lb-fav-btn"
+                    class="text-2xl transition-all hover:scale-110 active:scale-95"><i
+                        class="ph-fill ph-heart"></i></button>
+                <button onclick="lb.close()"
+                    class="text-3xl text-gray-400 hover:text-white hover:rotate-90 transition-all"><i
+                        class="ph ph-x"></i></button>
+            </div>
+        </div>
+        <div class="flex-1 relative flex items-center justify-center overflow-hidden group">
+            <button onclick="lb.prev()"
+                class="absolute left-4 z-10 p-4 bg-black/50 rounded-full hover:bg-white hover:text-black transition-all opacity-0 group-hover:opacity-100"><i
+                    class="ph-bold ph-caret-left text-2xl"></i></button>
+            <img id="lb-img" class="max-h-full max-w-full object-contain shadow-2xl" onclick="lb.toggleZoom(event)">
+            <button onclick="lb.next()"
+                class="absolute right-4 z-10 p-4 bg-black/50 rounded-full hover:bg-white hover:text-black transition-all opacity-0 group-hover:opacity-100"><i
+                    class="ph-bold ph-caret-right text-2xl"></i></button>
+        </div>
+        <div
+            class="bg-gradient-to-t from-black via-black/90 to-transparent shrink-0 p-6 absolute bottom-0 inset-x-0 z-40">
+            <div class="max-w-3xl mx-auto flex flex-col items-center">
+                <h3 id="lb-title" class="text-2xl font-bold font-outfit text-white mb-2">Titre</h3>
+                <div id="lb-exif"
+                    class="flex flex-wrap justify-center gap-4 text-xs font-mono text-brand-accent mb-4 border-t border-white/10 pt-2 opacity-80">
+                </div>
+
+                <!-- V28 INTERACTIVE STARS -->
+                <div id="lb-stars"
+                    class="flex justify-center text-brand-gold text-2xl gap-2 mb-3 cursor-pointer hover:opacity-80 transition-opacity"
+                    title="Changer la note"></div>
+
+                <div id="lb-tags" class="flex justify-center gap-2 mb-2"></div>
+                <p id="lb-desc" class="text-gray-300 text-sm italic text-center max-w-xl"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPORTER -->
+    <div id="importer" class="fixed inset-0 z-50 hidden bg-[#111]">
+        <div class="h-20 border-b border-white/10 flex items-center justify-between px-8 bg-[#1a1a1a]">
+            <h2 class="text-2xl font-bold font-outfit">Assistant d'Importation</h2>
+            <button onclick="ui.closeImporter()" class="text-gray-400 hover:text-white px-4">Annuler</button>
+        </div>
+        <div class="flex h-[calc(100vh-5rem)]">
+            <div class="w-80 border-r border-white/10 flex flex-col p-4 bg-[#151515]">
+                <div
+                    class="border-2 border-dashed border-white/20 rounded-xl flex-1 flex flex-col items-center justify-center relative hover:border-brand-accent transition-colors cursor-pointer bg-white/5">
+                    <input type="file" id="batch-input" multiple accept="image/*"
+                        class="absolute inset-0 opacity-0 cursor-pointer">
+                    <i class="ph-thin ph-images text-6xl text-gray-500 mb-4"></i>
+                    <p class="font-bold text-gray-400 text-center px-4">Glisser des photos ou cliquer ici</p>
+                </div>
+            </div>
+            <div class="flex-1 flex flex-col bg-[#0f0f11]">
+                <div id="staging-area" class="flex-1 overflow-y-auto p-8 grid grid-cols-1 gap-6"></div>
+                <div class="h-24 border-t border-white/10 flex items-center justify-between px-8 bg-[#1a1a1a]">
+                    <span class="text-gray-500" id="import-count">0 photo(s) prête(s)</span>
+                    <button onclick="batch.commit()"
+                        class="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-brand-accent transition-colors">TOUT ENREGISTRER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTEXT MENU -->
+    <div id="context-menu" class="glass-panel shadow-2xl">
+        <div id="menu-set-cover" onclick="ui.setAsCover()" class="menu-item"><i class="ph-bold ph-star"></i> Définir comme miniature</div>
+        <div id="menu-open-folder" onclick="ui.openSourceFolder()" class="menu-item"><i class="ph-bold ph-folder-open"></i> Ouvrir dans Windows</div>
+        <div id="group-rating" class="p-3 border-t border-white/5 mt-1">
+            <div class="text-[9px] uppercase font-bold text-gray-500 mb-2 px-1">Note de l'observation</div>
+            <div id="context-rating-stars" class="flex gap-2"></div>
+        </div>
+        <div id="menu-restore-default" onclick="ui.restoreDefaultImage()" class="menu-item border-t border-white/5"><i class="ph-bold ph-arrow-counter-clockwise"></i> Restaurer par défaut</div>
+        <div id="menu-delete" onclick="ui.deleteObservation()" class="menu-item text-red-400 hover:text-red-300"><i class="ph-bold ph-trash"></i> Supprimer</div>
+    </div>
+
+    <!-- CROPPER MODAL -->
+    <div id="cropper-modal" class="fixed inset-0 z-[100] bg-black hidden flex flex-col">
+        <div class="h-16 flex justify-between items-center px-6 glass shrink-0 relative z-10">
+            <h3 class="font-bold">Ajuster la miniature (3:4)</h3>
+            <div class="flex gap-3">
+                <button onclick="ui.closeCropper()" class="px-4 py-2 rounded-lg text-sm font-bold text-gray-400 hover:text-white">Annuler</button>
+                <button onclick="ui.saveCrop()" class="px-6 py-2 rounded-lg text-sm bg-brand-accent text-black font-bold">Enregistrer</button>
+            </div>
+        </div>
+        <div class="flex-1 bg-black relative flex items-center justify-center p-8 overflow-hidden">
+            <img id="cropper-img" src="" class="max-w-full max-h-full">
+        </div>
+    </div>
+
+    <script src="database.js"></script>
+    <script src="app.js"></script>
+
+</body>
+
+</html>

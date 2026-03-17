@@ -1,0 +1,853 @@
+[
+    {
+        "name": "Chien",
+        "oldSci": "Canis lupus familiaris",
+        "newSci": "Canis familiaris",
+        "common": "Chien"
+    },
+    {
+        "name": "Chat",
+        "oldSci": "Felis silvestris",
+        "newSci": "Muscicapidae",
+        "common": "Gobemouches, Traquets et apparentés"
+    },
+    {
+        "name": "Lapin",
+        "oldSci": "Oryctolagus cuniculus",
+        "newSci": "Leporidae",
+        "common": "Lièvres et Lapins"
+    },
+    {
+        "name": "Hamster",
+        "oldSci": "Cricetus cricetus",
+        "newSci": "Myomorpha",
+        "common": "Myomorphes"
+    },
+    {
+        "name": "Vache",
+        "oldSci": "Bos taurus",
+        "newSci": "Molothrus",
+        "common": "Vachers"
+    },
+    {
+        "name": "Taureau",
+        "oldSci": "Bos taurus",
+        "newSci": "Lithobates catesbeianus",
+        "common": "Grenouille-taureau"
+    },
+    {
+        "name": "Cheval",
+        "oldSci": "Equus caballus",
+        "newSci": "Actitis macularius",
+        "common": "Chevalier grivelé"
+    },
+    {
+        "name": "Âne",
+        "oldSci": "Equus asinus",
+        "newSci": "Ranunculaceae",
+        "common": "Renonculacées"
+    },
+    {
+        "name": "Cochon",
+        "oldSci": "Sus scrofa domesticus",
+        "newSci": "Sternorrhyncha",
+        "common": "Pucerons, Cochenilles et apparentés"
+    },
+    {
+        "name": "Chèvre",
+        "oldSci": "Capra hircus",
+        "newSci": "Lonicera",
+        "common": "chèvrefeuilles"
+    },
+    {
+        "name": "Poule",
+        "oldSci": "Gallus gallus domesticus",
+        "newSci": "Gallinula chloropus",
+        "common": "Gallinule poule-d'eau"
+    },
+    {
+        "name": "Coq",
+        "oldSci": "Gallus gallus",
+        "newSci": "Columbiformes",
+        "common": "Pigeons et tourterelles"
+    },
+    {
+        "name": "Canard",
+        "oldSci": "Anas platyrhynchos",
+        "newSci": "Anatidae",
+        "common": "Canards, Oies et Apparentés"
+    },
+    {
+        "name": "Oie",
+        "oldSci": "Anser anser",
+        "newSci": "Anatidae",
+        "common": "Canards, Oies et Apparentés"
+    },
+    {
+        "name": "Loup",
+        "oldSci": "Canis lupus",
+        "newSci": "Lycoperdaceae",
+        "common": "Lycoperdacées"
+    },
+    {
+        "name": "Cerf",
+        "oldSci": "Cervus elaphus",
+        "newSci": "Odocoileus virginianus",
+        "common": "cerf de Virginie"
+    },
+    {
+        "name": "Biche",
+        "oldSci": "Cervus elaphus",
+        "newSci": "Fagaceae"
+    },
+    {
+        "name": "Chevreuil",
+        "oldSci": "Capreolus capreolus",
+        "newSci": "Odocoileus virginianus",
+        "common": "cerf de Virginie"
+    },
+    {
+        "name": "Blaireau",
+        "oldSci": "Meles meles",
+        "newSci": "Meles",
+        "common": "Blaireaux"
+    },
+    {
+        "name": "Loutre",
+        "oldSci": "Lutra lutra",
+        "newSci": "Lutrinae",
+        "common": "Loutres"
+    },
+    {
+        "name": "Hérisson",
+        "oldSci": "Erinaceus europaeus",
+        "newSci": "Eulipotyphla",
+        "common": "Musaraignes, hérissons, taupes et apparentés"
+    },
+    {
+        "name": "Écureuil",
+        "oldSci": "Sciurus vulgaris",
+        "newSci": "Sciuridae",
+        "common": "Écureuils, tamias et marmottes"
+    },
+    {
+        "name": "Marmotte",
+        "oldSci": "Marmota marmota",
+        "newSci": "Sciuromorpha",
+        "common": "Sciuromorphes"
+    },
+    {
+        "name": "Lièvre",
+        "oldSci": "Lepus europaeus",
+        "newSci": "Leporidae",
+        "common": "Lièvres et Lapins"
+    },
+    {
+        "name": "Taupe",
+        "oldSci": "Talpa europaea",
+        "newSci": "Eulipotyphla",
+        "common": "Musaraignes, hérissons, taupes et apparentés"
+    },
+    {
+        "name": "Chauve-souris",
+        "oldSci": "Pipistrellus pipistrellus",
+        "newSci": "Chiroptera",
+        "common": "Chiroptères"
+    },
+    {
+        "name": "Moineau",
+        "oldSci": "Passer domesticus",
+        "newSci": "Passeridae",
+        "common": "Moineaux et Niverolles"
+    },
+    {
+        "name": "Pigeon",
+        "oldSci": "Columba livia",
+        "newSci": "Columbiformes",
+        "common": "Pigeons et tourterelles"
+    },
+    {
+        "name": "Merle",
+        "oldSci": "Turdus merula",
+        "newSci": "Turdidae",
+        "common": "Merles, Grives et Apparentés"
+    },
+    {
+        "name": "Pie",
+        "oldSci": "Pica pica",
+        "newSci": "Agaricomycetes",
+        "common": "Agaricomycètes"
+    },
+    {
+        "name": "Mésange",
+        "oldSci": "Parus major",
+        "newSci": "Paridae",
+        "common": "Mésanges"
+    },
+    {
+        "name": "Rouge-gorge",
+        "oldSci": "Erithacus rubecula",
+        "newSci": "Turdus migratorius",
+        "common": "Merle d'Amérique"
+    },
+    {
+        "name": "Geai",
+        "oldSci": "Garrulus glandarius",
+        "newSci": "Cyanocitta cristata",
+        "common": "Geai bleu"
+    },
+    {
+        "name": "Héron",
+        "oldSci": "Ardea cinerea",
+        "newSci": "Pelecaniformes",
+        "common": "Hérons et apparentés"
+    },
+    {
+        "name": "Goéland",
+        "oldSci": "Larus michahellis",
+        "newSci": "Laridae",
+        "common": "Goélands, mouettes et sternes"
+    },
+    {
+        "name": "Cigogne",
+        "oldSci": "Ciconia ciconia",
+        "newSci": "Ciconiiformes",
+        "common": "Cigognes et apparentés"
+    },
+    {
+        "name": "Hirondelle",
+        "oldSci": "Hirundo rustica",
+        "newSci": "Hirundinidae",
+        "common": "Hirondelles"
+    },
+    {
+        "name": "Aigle",
+        "oldSci": "Aquila chrysaetos",
+        "newSci": "Accipitridae",
+        "common": "Buses, aigles et apparentés"
+    },
+    {
+        "name": "Faucon",
+        "oldSci": "Falco tinnunculus",
+        "newSci": "Falconiformes",
+        "common": "Faucons & Caracaras"
+    },
+    {
+        "name": "Autruche",
+        "oldSci": "Struthio camelus",
+        "newSci": "Struthioniformes",
+        "common": "Autruches"
+    },
+    {
+        "name": "Manchot",
+        "oldSci": "Aptenodytes forsteri",
+        "newSci": "Sphenisciformes",
+        "common": "Manchots"
+    },
+    {
+        "name": "Pingouin",
+        "oldSci": "Alca torda",
+        "newSci": "Alca",
+        "common": "Pingouins"
+    },
+    {
+        "name": "Lion",
+        "oldSci": "Panthera leo",
+        "newSci": "Taraxacum officinale",
+        "common": "Pissenlit officinal"
+    },
+    {
+        "name": "Tigre",
+        "oldSci": "Panthera tigris",
+        "newSci": "Erebidae"
+    },
+    {
+        "name": "Éléphant",
+        "oldSci": "Loxodonta africana",
+        "newSci": "Elephantopinae"
+    },
+    {
+        "name": "Girafe",
+        "oldSci": "Giraffa camelopardalis",
+        "newSci": "Giraffidae",
+        "common": "Girafes et okapis"
+    },
+    {
+        "name": "Zèbre",
+        "oldSci": "Equus quagga",
+        "newSci": "Salticus",
+        "common": "Saltiques zébrées"
+    },
+    {
+        "name": "Gorille",
+        "oldSci": "Gorilla gorilla",
+        "newSci": "Gorilla",
+        "common": "Gorilles"
+    },
+    {
+        "name": "Koala",
+        "oldSci": "Phascolarctos cinereus",
+        "newSci": "Vombatiformes"
+    },
+    {
+        "name": "Paresseux",
+        "oldSci": "Bradypus variegatus",
+        "newSci": "Pilosa",
+        "common": "Fourmiliers et Paresseux"
+    },
+    {
+        "name": "Requin",
+        "oldSci": "Etmopterus perryi",
+        "newSci": "Chondrichthyes",
+        "common": "Requins, raies et chimères"
+    },
+    {
+        "name": "Dauphin",
+        "oldSci": "Tursiops truncatus",
+        "newSci": "Delphinium",
+        "common": "Dauphinelles et pieds-d'alouette"
+    },
+    {
+        "name": "Pieuvre",
+        "oldSci": "Callyspongia fallax",
+        "newSci": "Octopus vulgaris",
+        "common": "Poulpe commun"
+    },
+    {
+        "name": "Papillon",
+        "oldSci": "Papilio machaon",
+        "newSci": "Lepidoptera",
+        "common": "Lépidoptères (Papillons)"
+    },
+    {
+        "name": "Abeille",
+        "oldSci": "Apis mellifera",
+        "newSci": "Hymenoptera",
+        "common": "Guêpes, abeilles, fourmis et apparentés"
+    },
+    {
+        "name": "Oryx",
+        "oldSci": "Oryx gazella",
+        "newSci": "Oryx",
+        "common": "Oryx"
+    },
+    {
+        "name": "Suricate",
+        "oldSci": "Suricata suricatta",
+        "newSci": "Herpestidae",
+        "common": "Mangoustes"
+    },
+    {
+        "name": "Libellule",
+        "oldSci": "Anax imperator",
+        "newSci": "Odonata",
+        "common": "Libellules et demoiselles"
+    },
+    {
+        "name": "Antilope",
+        "oldSci": "Antilopinae",
+        "newSci": "Bovidae",
+        "common": "Bovidés"
+    },
+    {
+        "name": "Iguane",
+        "oldSci": "Iguana iguana",
+        "newSci": "Iguanidae",
+        "common": "Iguanes"
+    },
+    {
+        "name": "Hibou",
+        "oldSci": "Bubo bubo",
+        "newSci": "Strigiformes",
+        "common": "Hiboux, Chouettes et apparentés"
+    },
+    {
+        "name": "Criquet",
+        "oldSci": "Schistocerca gregaria",
+        "newSci": "Caelifera",
+        "common": "Criquets"
+    },
+    {
+        "name": "Axolotl",
+        "oldSci": "Ambystoma tigrinum",
+        "newSci": "Ambystomatidae"
+    },
+    {
+        "name": "Fennec",
+        "oldSci": "Vulpes zerda",
+        "newSci": "Vulpes"
+    },
+    {
+        "name": "Murène",
+        "oldSci": "Muraena helena",
+        "newSci": "Anguilliformes",
+        "common": "Anguilles, congres et murènes"
+    },
+    {
+        "name": "Orvet",
+        "oldSci": "Anguis fragilis",
+        "newSci": "Anguidae",
+        "common": "Orvets et Lézards alligator"
+    },
+    {
+        "name": "Moustique",
+        "oldSci": "Aedes aegypti",
+        "newSci": "Diptera",
+        "common": "Mouches, Moustiques et Apparentés"
+    },
+    {
+        "name": "Léopard",
+        "oldSci": "Panthera pardus",
+        "newSci": "Cossoidea"
+    },
+    {
+        "name": "Guépard",
+        "oldSci": "Acinonyx jubatus",
+        "newSci": "Felinae",
+        "common": "Petits félins"
+    },
+    {
+        "name": "Rhinocéros",
+        "oldSci": "Ceratotherium simum",
+        "newSci": "Dynastinae"
+    },
+    {
+        "name": "Hippopotame",
+        "oldSci": "Hippopotamus amphibius",
+        "newSci": "Ancodonta",
+        "common": "Hippopotames"
+    },
+    {
+        "name": "Kangourou",
+        "oldSci": "Macropus giganteus",
+        "newSci": "Macropodidae",
+        "common": "Kangourous, Wallabies et apparentés"
+    },
+    {
+        "name": "Cygne",
+        "oldSci": "Cygnus olor",
+        "newSci": "Cygnus",
+        "common": "cygnes"
+    },
+    {
+        "name": "Martin-pêcheur",
+        "oldSci": "Alcedo atthis",
+        "newSci": "Coraciiformes",
+        "common": "Martins-pêcheurs et apparentés"
+    },
+    {
+        "name": "Perroquet",
+        "oldSci": "Psittacidae",
+        "newSci": "Psittaciformes",
+        "common": "Perroquets, perruches et apparentés"
+    },
+    {
+        "name": "Corbeau",
+        "oldSci": "Corvus corax",
+        "newSci": "Corvus",
+        "common": "Corbeaux et Corneilles"
+    },
+    {
+        "name": "Perruche",
+        "oldSci": "Melopsittacus undulatus",
+        "newSci": "Psittaciformes",
+        "common": "Perroquets, perruches et apparentés"
+    },
+    {
+        "name": "Toucan",
+        "oldSci": "Ramphastos toco",
+        "newSci": "Piciformes",
+        "common": "Pics, toucans et apparentés"
+    },
+    {
+        "name": "Colibri",
+        "oldSci": "Archilochus colubris",
+        "newSci": "Apodiformes",
+        "common": "Martinets et colibris"
+    },
+    {
+        "name": "Pélican",
+        "oldSci": "Pelecanus onocrotalus",
+        "newSci": "Pelecaniformes",
+        "common": "Hérons et apparentés"
+    },
+    {
+        "name": "Requin marteau",
+        "oldSci": "Sphyrna mokarran",
+        "newSci": "Sphyrnidae",
+        "common": "Requins-marteaux"
+    },
+    {
+        "name": "Hippocampe",
+        "oldSci": "Hippocampus hippocampus",
+        "newSci": "Syngnathidae",
+        "common": "Hippocampes et Syngnathes"
+    },
+    {
+        "name": "Raie manta",
+        "oldSci": "Manta birostris",
+        "newSci": "Mobulidae",
+        "common": "Raies mantas"
+    },
+    {
+        "name": "Espadon",
+        "oldSci": "Pristis pectinata",
+        "newSci": "Xiphiidae",
+        "common": "Espadon"
+    },
+    {
+        "name": "Étoile de mer",
+        "oldSci": "Asterias rubens",
+        "newSci": "Asteroidea",
+        "common": "Étoiles de mer"
+    },
+    {
+        "name": "Crabe",
+        "oldSci": "Carcinus maenas",
+        "newSci": "Brachyura",
+        "common": "Vrais crabes"
+    },
+    {
+        "name": "Scarabée",
+        "oldSci": "Scarabaeus sacer",
+        "newSci": "Coleoptera",
+        "common": "Coléoptères"
+    },
+    {
+        "name": "Cigale",
+        "oldSci": "Cicada orni",
+        "newSci": "Hemiptera",
+        "common": "Punaises, cigales, pucerons et apparentés"
+    },
+    {
+        "name": "Crocodile",
+        "oldSci": "Crocodylus niloticus",
+        "newSci": "Crocodylidae",
+        "common": "Crocodiles et Faux-gavials"
+    },
+    {
+        "name": "Tapir",
+        "oldSci": "Tapirus terrestris",
+        "newSci": "Perissodactyla",
+        "common": "Périssodactyles"
+    },
+    {
+        "name": "Mouette",
+        "oldSci": "Chroicocephalus ridibundus",
+        "newSci": "Charadriiformes",
+        "common": "Limicoles, mouettes et apparentés"
+    },
+    {
+        "name": "Paon",
+        "oldSci": "Pavo cristatus",
+        "newSci": "Aglais io",
+        "common": "Paon-du-jour"
+    },
+    {
+        "name": "Grillon",
+        "oldSci": "Gryllus campestris",
+        "newSci": "Ensifera",
+        "common": "Ensifères"
+    },
+    {
+        "name": "Bourdon",
+        "oldSci": "Bombus terrestris",
+        "newSci": "Apoidea",
+        "common": "Abeilles, bourdons et apparentés"
+    },
+    {
+        "name": "Mouche",
+        "oldSci": "Musca domestica",
+        "newSci": "Diptera",
+        "common": "Mouches, Moustiques et Apparentés"
+    },
+    {
+        "name": "Mygale",
+        "oldSci": "Theraphosa blondi",
+        "newSci": "Mygalomorphae",
+        "common": "Mygales"
+    },
+    {
+        "name": "Baleine",
+        "oldSci": "Balaenoptera musculus",
+        "newSci": "Mysticeti",
+        "common": "Mysticètes"
+    },
+    {
+        "name": "Beluga",
+        "oldSci": "Delphinapterus leucas",
+        "newSci": "Monodontidae",
+        "common": "Monodontidés"
+    },
+    {
+        "name": "Saumon",
+        "oldSci": "Salmo salar",
+        "newSci": "Salmonidae",
+        "common": "Saumons, truites et ombles"
+    },
+    {
+        "name": "Cobra",
+        "oldSci": "Ophiophagus hannah",
+        "newSci": "Serpentes",
+        "common": "Serpents"
+    },
+    {
+        "name": "Élan",
+        "oldSci": "Alces alces",
+        "newSci": "Accipitriformes",
+        "common": "Rapaces"
+    },
+    {
+        "name": "Gazelle",
+        "oldSci": "Gazella",
+        "newSci": "Bovidae",
+        "common": "Bovidés"
+    },
+    {
+        "name": "Okapi",
+        "oldSci": "Okapia johnstoni",
+        "newSci": "Giraffidae",
+        "common": "Girafes et okapis"
+    },
+    {
+        "name": "Phacochère",
+        "oldSci": "Phacochoerus africanus",
+        "newSci": "Phacochoerus",
+        "common": "Phacochères"
+    },
+    {
+        "name": "Serval",
+        "oldSci": "Leptailurus serval",
+        "newSci": "Leptailurus"
+    },
+    {
+        "name": "Lynx",
+        "oldSci": "Lynx lynx",
+        "newSci": "Oxyopidae"
+    },
+    {
+        "name": "Tigre blanc",
+        "oldSci": "Panthera tigris",
+        "newSci": "Ardices glatignyi"
+    },
+    {
+        "name": "Ibis",
+        "oldSci": "Eudocimus ruber",
+        "newSci": "Pelecaniformes",
+        "common": "Hérons et apparentés"
+    },
+    {
+        "name": "Aigrette",
+        "oldSci": "Egretta garzetta",
+        "newSci": "Ardeidae",
+        "common": "Hérons et Aigrettes"
+    },
+    {
+        "name": "Faisan",
+        "oldSci": "Phasianus colchicus",
+        "newSci": "Phasianidae",
+        "common": "Faisans, perdrix et apparentés"
+    },
+    {
+        "name": "Caille",
+        "oldSci": "Coturnix coturnix",
+        "newSci": "Papaver rhoeas",
+        "common": "Coquelicot commun"
+    },
+    {
+        "name": "Carpe",
+        "oldSci": "Cyprinus carpio",
+        "newSci": "Larentiinae"
+    },
+    {
+        "name": "Silure",
+        "oldSci": "Silurus aristotelis",
+        "newSci": "Silurus glanis",
+        "common": "Silure glane"
+    },
+    {
+        "name": "Combattant",
+        "oldSci": "Strombus pugilis",
+        "newSci": "Calidris pugnax",
+        "common": "Combattant varié"
+    },
+    {
+        "name": "Crevette",
+        "oldSci": "Palaemon serratus",
+        "newSci": "Caridea",
+        "common": "Crevettes Carides"
+    },
+    {
+        "name": "Bernard-l'ermite",
+        "oldSci": "Pagurus bernhardus",
+        "newSci": "Paguroidea",
+        "common": "Bernard l'Ermite"
+    },
+    {
+        "name": "Corail",
+        "oldSci": "Corallium rubrum",
+        "newSci": "Symphoricarpos orbiculatus",
+        "common": "Symphorine orbiculaire"
+    },
+    {
+        "name": "Termite",
+        "oldSci": "Reticulitermes lucifugus",
+        "newSci": "Blattodea",
+        "common": "Blattes et termites"
+    },
+    {
+        "name": "Punaise",
+        "oldSci": "Palomena prasina",
+        "newSci": "Hemiptera",
+        "common": "Punaises, cigales, pucerons et apparentés"
+    },
+    {
+        "name": "Tique",
+        "oldSci": "Hyalomma asiaticum",
+        "newSci": "Ixodida",
+        "common": "Tiques"
+    },
+    {
+        "name": "Scolopendre",
+        "oldSci": "Asplenium scolopendrium var. scolopendrium",
+        "newSci": "Scolopendromorpha",
+        "common": "Scolopendres"
+    },
+    {
+        "name": "Bouvreuil",
+        "oldSci": "Pyrrhula pyrrhula",
+        "newSci": "Pyrrhula",
+        "common": "Bouvreuils"
+    },
+    {
+        "name": "Tourterelle",
+        "oldSci": "Streptopelia decaocto",
+        "newSci": "Columbiformes",
+        "common": "Pigeons et tourterelles"
+    },
+    {
+        "name": "Coucou",
+        "oldSci": "Cuculus canorus",
+        "newSci": "Cuculiformes",
+        "common": "Coucous et apparentés"
+    },
+    {
+        "name": "Grimpereau",
+        "oldSci": "Certhia brachydactyla",
+        "newSci": "Certhiidae",
+        "common": "Grimpereaux"
+    },
+    {
+        "name": "Étourneau",
+        "oldSci": "Sturnus vulgaris",
+        "newSci": "Sturnidae",
+        "common": "Étourneaux, Martins et Apparentés"
+    },
+    {
+        "name": "Émeu",
+        "oldSci": "Dromaius novaehollandiae",
+        "newSci": "Casuariiformes",
+        "common": "Casoars et Émeus"
+    },
+    {
+        "name": "Kakapo",
+        "oldSci": "Strigops habroptila",
+        "newSci": "Strigopidae",
+        "common": "Nestors et Strigops"
+    },
+    {
+        "name": "Balbuzard",
+        "oldSci": "Pandion haliaetus",
+        "newSci": "Pandionidae",
+        "common": "Balbuzards"
+    },
+    {
+        "name": "Tantale",
+        "oldSci": "Mycteria ibis",
+        "newSci": "Mycteria",
+        "common": "Tantales"
+    },
+    {
+        "name": "Garde-bœufs",
+        "oldSci": "Bubulcus ibis",
+        "newSci": "Ardea ibis",
+        "common": "Héron garde-boeufs"
+    },
+    {
+        "name": "Cécilie",
+        "oldSci": "Ichthyophis glutinosus",
+        "newSci": "Gymnophiona",
+        "common": "Gymnophiones"
+    },
+    {
+        "name": "Sonneur",
+        "oldSci": "Bombina bombina",
+        "newSci": "Bombina",
+        "common": "Sonneurs"
+    },
+    {
+        "name": "Moloch",
+        "oldSci": "Moloch horridus",
+        "newSci": "Epipactis helleborine helleborine",
+        "common": "Épipactide à larges feuilles"
+    },
+    {
+        "name": "Tuatara",
+        "oldSci": "Sphenodon punctatus",
+        "newSci": "Rhynchocephalia",
+        "common": "Rhynchocéphales"
+    },
+    {
+        "name": "Serpent corail",
+        "oldSci": "Micrurus fulvius",
+        "newSci": "Micrurus",
+        "common": "Corails"
+    },
+    {
+        "name": "Chrysope",
+        "oldSci": "Chrysoperla carnea",
+        "newSci": "Chrysoperla",
+        "common": "chrysopes vertes communes"
+    },
+    {
+        "name": "Bombyle",
+        "oldSci": "Bombylius major",
+        "newSci": "Bombylius",
+        "common": "Bombyles"
+    },
+    {
+        "name": "Puce",
+        "oldSci": "Ctenocephalides felis",
+        "newSci": "Hemiptera",
+        "common": "Punaises, cigales, pucerons et apparentés"
+    },
+    {
+        "name": "Glomeris",
+        "oldSci": "Glomeris marginata",
+        "newSci": "Glomeris"
+    },
+    {
+        "name": "Lepisme",
+        "oldSci": "Lepisma saccharina",
+        "newSci": "Lepisma",
+        "common": "Lépismes"
+    },
+    {
+        "name": "Musaraigne",
+        "oldSci": "Sorex araneus",
+        "newSci": "Eulipotyphla",
+        "common": "Musaraignes, hérissons, taupes et apparentés"
+    },
+    {
+        "name": "Loir",
+        "oldSci": "Glis glis",
+        "newSci": "Gliridae",
+        "common": "Loirs et apparentés"
+    },
+    {
+        "name": "Limace",
+        "oldSci": "Arion rufus",
+        "newSci": "Stylommatophora",
+        "common": "Mollusques terrestres et limaces"
+    }
+]

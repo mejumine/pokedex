@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Prévisualisation des Images Premium</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #121212;
+            color: white;
+            padding: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .info {
+            padding: 15px;
+        }
+
+        .name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .latin {
+            font-style: italic;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .status.ok {
+            background: #2e7d32;
+        }
+
+        .status.missing {
+            background: #c62828;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Audit des Images & Noms Scientifiques</h1>
+    <div id="stats" style="margin-bottom: 20px; color: #aaa;"></div>
+    <div class="grid" id="container"></div>
+
+    <script src="database.js"></script>
+    <script>
+        const container = document.getElementById('container');
+        const statsEl = document.getElementById('stats');
+
+        const animals = window.DB;
+        let withScientific = 0;
+
+        animals.forEach(animal => {
+            if (animal.scientificName) withScientific++;
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <img src="${animal.imgRef}" alt="${animal.name}">
+                <div class="info">
+                    <div class="name">${animal.name}</div>
+                    <div class="latin">${animal.scientificName || 'Nom latin manquant'}</div>
+                    <span class="status ${animal.scientificName ? 'ok' : 'missing'}">
+                        ${animal.scientificName ? 'Prêt pour Premium' : 'Wikipedia uniquement'}
+                    </span>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        statsEl.innerText = `${animals.length} animaux au total. ${withScientific} noms scientifiques trouvés (${Math.round(withScientific / animals.length * 100)}%).`;
+    </script>
+</body>
+
+</html>

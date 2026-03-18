@@ -7,28 +7,43 @@
             background-color: #0f0f11;
             color: #e0e0e0;
             user-select: none;
+            -webkit-user-select: none;
         }
 
         .glass {
-            background: rgba(30, 30, 30, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
+    background: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
 
-        .glass-panel {
-            background: rgba(20, 20, 20, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
+.glass-panel {
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
 
         .hide-scroll::-webkit-scrollbar {
             display: none;
         }
 
+        .nav-btn {
+            transition: all 0.2s ease;
+        }
+
         .nav-btn.active {
-            background-color: rgba(255, 255, 255, 0.1);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-btn:not(.action-btn):hover {
+            transform: scale(1.04);
         }
 
         .img-fit {
@@ -49,27 +64,35 @@
             font-weight: bold;
         }
 
-        .mode-btn {
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #9ca3af;
-            transition: all 0.2s;
-            cursor: pointer;
-            background: transparent;
+        /* Legacy mode-btn styles removed to avoid conflicts with new pill design */
+
+        .f-btn, .mode-btn, .sort-btn {
+            transition: all 0.2s ease;
         }
 
-        .mode-btn:hover {
-            color: white;
-            border-color: rgba(255, 255, 255, 0.2);
+        /* Hover effect: only turns white if NOT on a white pill (active) */
+        .f-btn:hover:not(.active-pill-text):not(.active-accent-text), 
+        .mode-btn:hover:not(.active-pill-text):not(.active-accent-text), 
+        .sort-btn:hover:not(.active-pill-text):not(.active-accent-text) {
+            color: white !important;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Always scale on hover for feedback */
+        .f-btn:hover, .mode-btn:hover, .sort-btn:hover {
+            transform: scale(1.08);
         }
 
-        .mode-btn.active {
-            background: white;
-            color: black;
-            border-color: white;
+        .rating-group {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+        }
+
+        .rating-group i:hover,
+        .rating-group i:hover ~ i {
+            color: #fbbf24 !important; /* amber-400 / brand-gold */
+            transform: scale(1.25);
         }
 
         .rot-180 {
@@ -136,6 +159,11 @@
             will-change: transform;
         }
 
+        #lb-img {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
         img {
             -webkit-user-drag: none;
             user-select: none;
@@ -143,17 +171,17 @@
             -webkit-user-select: none;
             -ms-user-select: none;
         }
-
-
-
-        .card-hover:hover {
-            transform: scale(1.03) translateY(-5px);
-            box-shadow: 0 0 15px -2px var(--brand-accent);
-            border-color: var(--brand-accent);
-            z-index: 50;
-            position: relative;
-            /* Ensure z-index applies */
-        }
+/* Hover state consolidated and boosted */
+.card-hover:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 
+        0 0 60px var(--brand-accent-glow), 
+        0 0 30px var(--brand-accent-glow),
+        0 20px 40px rgba(0,0,0,0.6);
+    border-color: var(--brand-accent);
+    z-index: 50;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
         @keyframes starPop {
             0% {
@@ -188,6 +216,7 @@
 
         .stats-pulse {
             animation: pulse-accent 2s infinite ease-in-out;
+            box-shadow: 0 0 15px var(--brand-accent-glow);
         }
 
         #content {
@@ -218,29 +247,41 @@
             background-clip: content-box;
         }
 
-        #content>* {
+        #content > * {
             transition: opacity 0.3s ease;
         }
 
         .pill-bg {
             position: absolute;
-            background: var(--brand-color, #4FD1C5);
+            background: #ffffff; /* Default for filters */
             border-radius: 9999px;
             transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             z-index: 5;
-            opacity: 0.15;
+            opacity: 1; /* Full opacity for white pill */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Navigation pill: Darker/muted style as seen in photo */
+        #nav-pill {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: none;
         }
 
         .active-pill-text {
-            color: black !important;
+            color: #000000 !important; /* Force black for contrast on white pill */
+            font-weight: 800 !important;
         }
 
         .active-accent-text {
-            color: var(--brand-accent) !important;
+            color: #000000 !important; /* Force black for contrast on white pill */
+            font-weight: 800 !important;
         }
 
         .active-nav {
             color: white !important;
+            font-weight: 800 !important;
         }
 
         @keyframes gear-spin {
@@ -252,4 +293,30 @@
                 transform: rotate(360deg);
             }
         }
+        
+        /* Restored Legacy Animations */
+        @keyframes reveal {
+            0% { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(4px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .animate-reveal {
+            animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+/* Redundant card-hover blocks removed, consolidated above */
+
+/* Background glow removed as per user request */
+
+/* New: Glow for discovered items - now uses theme color */
+.border-brand-accent {
+    border-color: var(--brand-accent) !important;
+    opacity: 0.8;
+    box-shadow: 0 0 10px var(--brand-accent-glow);
+}
+
+.box-shadow-brand {
+    box-shadow: 0 0 20px rgba(79, 209, 197, 0.2);
+}
+
     

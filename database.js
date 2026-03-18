@@ -34998,7 +34998,7 @@ window.DB = [
         "habitat": "Prairie",
         "rarity": 3
     },
-    "desc": "La guêpe-araignée (Argiope bruennichi) est un espèce de spinteur spectaculaire qui éblouit par sa robe jaune et noire. Cette arachnide fréquente les zones humides et les prairies et est connue pour ses toiles géantes ornées de diapasons. Son nom vient de son aspect ressemblant à une guêpe, mais n'a rien à voir avec les guêpes vraies. Elle est parfois observée dans des mouvements agressifs, notamment lorsqu'elle protège son œuf, mais elle n'est pas dangereuse pour les humains.",
+    "desc": "La guêpe-araignée (Argiope bruennichi) est un espèce de spinteur spectaculaire qui éblouit par sa robe jaune et noire. Cette arachnide fréquente les zones humides et les prairies et est connue pour ses toiles géantes ornées de diapasons. Son nom vient de son aspect ressemblant à une guêpe, mais n'a rien à voir avec les guêpes vraies. Elle est parfois observée dans des mouvements agressifs, notamment lorsqu'elle protège son oeuf, mais elle n'est pas dangereuse pour les humains.",
     "scientificName": "Argiope bruennichi",
     "englishName": "Wasp Spider",
     "tips": {

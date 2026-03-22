@@ -4,21 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LumenDex - V1 Interactive</title>
+    <title>pokedex v1.0</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css">
     <script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
     <script>
         window._fs = require('fs');
-        window.onerror = function(msg, url, line, col, error) {
+        window.onerror = function (msg, url, line, col, error) {
             alert("ERREUR CRITIQUE :\n" + msg + "\nFichier : " + url + "\nLigne : " + line + ":" + col);
             if (window._fs) {
-                 window._fs.appendFileSync('error.log', new Date().toISOString() + ' - REAL ERROR: ' + msg + ' at ' + line + ':' + col + '\n' + (error ? error.stack : '') + '\n\n');
+                window._fs.appendFileSync('error.log', new Date().toISOString() + ' - REAL ERROR: ' + msg + ' at ' + line + ':' + col + '\n' + (error ? error.stack : '') + '\n\n');
             }
         };
-        
-        window.addEventListener('unhandledrejection', function(event) {
+
+        window.addEventListener('unhandledrejection', function (event) {
             window._fs.appendFileSync('error.log', new Date().toISOString() + ' - Promise Rejection: ' + event.reason + '\n\n');
             alert("Erreur Promesse: " + event.reason);
         });
@@ -55,13 +55,15 @@
     <aside class="w-72 h-full glass border-r border-white/5 flex flex-col z-20 shrink-0">
         <!-- LOGO & THEME -->
         <div class="p-8 flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all group lg-shadow" onclick="document.getElementById('theme-picker').click()">
+            <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all group lg-shadow"
+                onclick="document.getElementById('theme-picker').click()">
                 <i class="ph-fill ph-aperture text-brand-accent text-3xl group-hover:animate-spin" id="logo-icon"></i>
             </div>
             <input type="color" id="theme-picker" class="hidden" oninput="ui.updateTheme(this.value)">
             <div>
                 <h1 class="font-outfit text-2xl font-extrabold text-white tracking-tight">pokedex</h1>
-                <p class="text-[10px] text-brand-accent uppercase tracking-widest font-bold opacity-80" id="logo-sub">Photo Utility</p>
+                <p class="text-[10px] text-brand-accent uppercase tracking-widest font-bold opacity-80" id="logo-sub">
+                    67 doro</p>
             </div>
         </div>
 
@@ -139,8 +141,10 @@
             <div class="bg-white/5 rounded-2xl p-5 border border-white/5 mb-4">
                 <div class="flex justify-between items-end mb-2">
                     <div class="flex flex-col">
-                        <span class="text-gray-400 text-[10px] font-bold uppercase tracking-widest" id="stats-label">Progression</span>
-                        <span class="text-[10px] text-brand-accent uppercase font-bold" id="stats-mode-label">TOUT</span>
+                        <span class="text-gray-400 text-[10px] font-bold uppercase tracking-widest"
+                            id="stats-label">Progression</span>
+                        <span class="text-[10px] text-brand-accent uppercase font-bold"
+                            id="stats-mode-label">TOUT</span>
                     </div>
                     <span id="stats-txt" class="text-brand-accent font-mono font-bold text-lg">0 / 0</span>
                 </div>
@@ -181,17 +185,22 @@
                         class="hidden items-center bg-black/30 rounded-full p-1 border border-white/10 shrink-0 relative">
                         <div id="gal-sort-pill" class="pill-bg"></div>
                         <button onclick="window.sort('date')" id="btn-sort-date"
-                            class="sort-btn px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors">Par Date</button>
+                            class="sort-btn px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors">Par
+                            Date</button>
                         <button onclick="window.sort('rating')" id="btn-sort-rating"
-                            class="sort-btn px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">Par Note</button>
+                            class="sort-btn px-3 py-1.5 rounded-full text-xs font-bold relative z-10 transition-colors text-gray-400">Par
+                            Note</button>
                     </div>
                     <div id="global-sort-dir-wrapper">
                         <button onclick="window.toggleSortDir()" id="btn-sort-dir"
                             class="w-8 h-8 rounded-full bg-black/30 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all active:scale-95"
                             title="Inverser le tri">
-                            <i class="ph-bold ph-arrow-down text-lg transition-transform duration-300 transform btn-sort-dir-icon"></i>
+                            <i
+                                class="ph-bold ph-arrow-down text-lg transition-transform duration-300 transform btn-sort-dir-icon"></i>
                         </button>
-                        <button id="dev-commit-btn" onclick="ui.commitToDatabase()" class="hidden w-8 h-8 rounded-full bg-brand-accent/20 border border-brand-accent/50 flex items-center justify-center text-brand-accent hover:bg-brand-accent hover:text-black transition-all active:scale-95" title="Enregistrer dans database.js">
+                        <button id="dev-commit-btn" onclick="ui.commitToDatabase()"
+                            class="hidden w-8 h-8 rounded-full bg-brand-accent/20 border border-brand-accent/50 flex items-center justify-center text-brand-accent hover:bg-brand-accent hover:text-black transition-all active:scale-95"
+                            title="Enregistrer dans database.js">
                             <i class="ph-bold ph-floppy-disk"></i>
                         </button>
                     </div>
@@ -293,12 +302,15 @@
                     <span class="text-gray-500" id="import-count">0 photo(s) prête(s)</span>
                     <div class="flex items-center gap-3">
                         <button onclick="batch.setAllEnv('Zoo')"
-                            class="bg-white/5 border border-white/10 text-gray-400 px-4 py-3 rounded-full text-xs font-bold hover:bg-white/10 hover:text-white transition-all uppercase tracking-wider">Tout mettre en Zoo</button>
+                            class="bg-white/5 border border-white/10 text-gray-400 px-4 py-3 rounded-full text-xs font-bold hover:bg-white/10 hover:text-white transition-all uppercase tracking-wider">Tout
+                            mettre en Zoo</button>
                         <button onclick="batch.setAllEnv('Sauvage')"
-                            class="bg-white/5 border border-white/10 text-gray-400 px-4 py-3 rounded-full text-xs font-bold hover:bg-white/10 hover:text-white transition-all uppercase tracking-wider">Tout mettre en Sauvage</button>
+                            class="bg-white/5 border border-white/10 text-gray-400 px-4 py-3 rounded-full text-xs font-bold hover:bg-white/10 hover:text-white transition-all uppercase tracking-wider">Tout
+                            mettre en Sauvage</button>
                         <div class="w-4"></div>
                         <button onclick="batch.commit()"
-                            class="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-brand-accent transition-colors">TOUT ENREGISTRER</button>
+                            class="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-brand-accent transition-colors">TOUT
+                            ENREGISTRER</button>
                     </div>
                 </div>
             </div>
@@ -307,14 +319,18 @@
 
     <!-- CONTEXT MENU -->
     <div id="context-menu" class="glass-panel shadow-2xl">
-        <div id="menu-set-cover" onclick="ui.setAsCover()" class="menu-item"><i class="ph-bold ph-star"></i> Définir comme miniature</div>
-        <div id="menu-open-folder" onclick="ui.openSourceFolder()" class="menu-item"><i class="ph-bold ph-folder-open"></i> Ouvrir dans Windows</div>
+        <div id="menu-set-cover" onclick="ui.setAsCover()" class="menu-item"><i class="ph-bold ph-star"></i> Définir
+            comme miniature</div>
+        <div id="menu-open-folder" onclick="ui.openSourceFolder()" class="menu-item"><i
+                class="ph-bold ph-folder-open"></i> Ouvrir dans Windows</div>
         <div id="group-rating" class="p-3 border-t border-white/5 mt-1">
             <div class="text-[9px] uppercase font-bold text-gray-500 mb-2 px-1">Note de l'observation</div>
             <div id="context-rating-stars" class="flex gap-2"></div>
         </div>
-        <div id="menu-restore-default" onclick="ui.restoreDefaultImage()" class="menu-item border-t border-white/5"><i class="ph-bold ph-arrow-counter-clockwise"></i> Restaurer par défaut</div>
-        <div id="menu-delete" onclick="ui.deleteObservation()" class="menu-item text-red-400 hover:text-red-300"><i class="ph-bold ph-trash"></i> Supprimer</div>
+        <div id="menu-restore-default" onclick="ui.restoreDefaultImage()" class="menu-item border-t border-white/5"><i
+                class="ph-bold ph-arrow-counter-clockwise"></i> Restaurer par défaut</div>
+        <div id="menu-delete" onclick="ui.deleteObservation()" class="menu-item text-red-400 hover:text-red-300"><i
+                class="ph-bold ph-trash"></i> Supprimer</div>
     </div>
 
     <!-- CROPPER MODAL -->
@@ -322,12 +338,21 @@
         <div class="h-16 flex justify-between items-center px-6 glass shrink-0 relative z-10">
             <h3 class="font-bold">Ajuster la miniature (3:4)</h3>
             <div class="flex gap-3">
-                <button onclick="ui.closeCropper()" class="px-4 py-2 rounded-lg text-sm font-bold text-gray-400 hover:text-white">Annuler</button>
-                <button onclick="ui.saveCrop()" class="px-6 py-2 rounded-lg text-sm bg-brand-accent text-black font-bold">Enregistrer</button>
+                <button onclick="ui.closeCropper()"
+                    class="px-4 py-2 rounded-lg text-sm font-bold text-gray-400 hover:text-white">Annuler</button>
+                <button onclick="ui.saveCrop()"
+                    class="px-6 py-2 rounded-lg text-sm bg-brand-accent text-black font-bold">Enregistrer</button>
             </div>
         </div>
         <div class="flex-1 bg-black relative flex items-center justify-center p-8 overflow-hidden">
             <img id="cropper-img" src="" class="max-w-full max-h-full">
+            <div id="cropper-loader"
+                class="absolute inset-0 z-20 bg-black/80 flex flex-col items-center justify-center hidden">
+                <div
+                    class="w-12 h-12 border-4 border-brand-accent/20 border-t-brand-accent rounded-full animate-spin mb-4">
+                </div>
+                <p class="text-sm font-bold text-gray-400">Génération de la miniature...</p>
+            </div>
         </div>
     </div>
 

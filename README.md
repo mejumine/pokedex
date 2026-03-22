@@ -142,6 +142,5 @@ Les issues et pull requests sont les bienvenus pour toute amélioration ou corre
 
 <div align="center">
 
-Fait avec ❤️ pour les passionnés de nature et de photographie
 
 </div>

@@ -12,13 +12,17 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^40.7.0",
-    "electron-builder": "^26.4.0"
+    "electron-builder": "^26.4.0",
+    "jimp": "^1.6.1",
+    "png-to-ico": "^3.0.1",
+    "pngjs": "^7.0.0"
   },
   "build": {
-    "appId": "com.quentin.lumendex",
-    "productName": "LumenDex",
+    "appId": "com.quentin.pokedex",
+    "productName": "Pokedex",
     "win": {
-      "target": "portable"
+      "target": "portable",
+      "icon": "icon.ico"
     }
   },
   "dependencies": {

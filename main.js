@@ -5,7 +5,8 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 1400,
         height: 900,
-        autoHideMenuBar: true, // This hides the menu bar
+        icon: path.join(__dirname, 'icon.ico'),
+        autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false

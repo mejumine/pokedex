@@ -10,7 +10,7 @@ window.addEventListener('unhandledrejection', function(e) {
 });
 
 
-const db = new Dexie('LumenDex_System');
+const db = new Dexie('Pokedex_System');
 // Version 1: initial
 // Version 2: added filePath and isCover
 // Version 3: added customAnimals table
@@ -1006,7 +1006,7 @@ window.lb = {
     download: async () => {
         const p = window.pl[window.li];
         const link = document.createElement('a');
-        link.download = p.originalName || `LumenDex_${p.id}.jpg`;
+        link.download = p.originalName || `Pokedex_${p.id}.jpg`;
         if (p.imageSrc) {
             // Cas rare : imageSrc encore présent en mémoire
             link.href = p.imageSrc;

@@ -2,11 +2,24 @@ const fs = require('fs');
 const path = require('path');
 const { shell } = require('electron');
 
+window.addEventListener('error', function(e) {
+    try { fs.appendFileSync('error_log.txt', new Date().toISOString() + ' ' + (e.error ? e.error.stack : e.message) + '\n'); } catch(ex) {}
+});
+window.addEventListener('unhandledrejection', function(e) {
+    try { fs.appendFileSync('error_log.txt', new Date().toISOString() + ' ' + (e.reason ? (e.reason.stack || e.reason) : e.reason) + '\n'); } catch(ex) {}
+});
+
+
 const db = new Dexie('LumenDex_System');
 // Version 1: initial
 // Version 2: added filePath and isCover
+// Version 3: added customAnimals table
 db.version(2).stores({
     obs: '++id,animalId,date,rating,isFav,*tags,desc,thumbnailSrc,exif,originalName,filePath,isCover'
+});
+db.version(3).stores({
+    obs: '++id,animalId,date,rating,isFav,*tags,desc,thumbnailSrc,exif,originalName,filePath,isCover',
+    customAnimals: '++id,name,type'
 });
 
 
@@ -117,13 +130,18 @@ window.batch = {
         const progressLabel = document.getElementById('import-progress-label');
         let done = 0;
 
-        // 🧪 TEST : pré-remplissage auto avec "Chat domestique" — retirer après tests
+        // Pré-remplissage : priorité à _importerPreset (animal custom venant d'être créé)
         const defaultAnimal = (() => {
+            if (window._importerPreset) {
+                const name = window._importerPreset;
+                window._importerPreset = null; // consommé une seule fois
+                return name;
+            }
             if (app.view === 'detail' && app.currentId) {
                 const a = DB.find(x => x.id === app.currentId);
                 if (a) return a.name;
             }
-            return 'Chat domestique';
+            return '';
         })();
 
         // Traitement en parallèle par paquets de 8 (optimal CPU/mémoire)
@@ -333,7 +351,10 @@ window.router = {
         // Prevent duplicate history entries or empty views
         const isLiteralChange = app.view !== view || (param && app.currentId !== param);
         if (push && isLiteralChange) {
-            window.router.history.push({ view: app.view, param: app.currentId });
+            // Save scroll position when leaving index
+            const contentEl = document.getElementById('content');
+            const savedScroll = (app.view === 'index' && contentEl) ? contentEl.scrollTop : 0;
+            window.router.history.push({ view: app.view, param: app.currentId, scroll: savedScroll });
             window.router.future = [];
         }
         app.lastView = app.view;
@@ -366,6 +387,16 @@ window.router = {
             window.router.future.push({ view: app.view, param: app.currentId });
             const h = window.router.history.pop();
             window.router.go(h.view, h.param, false);
+            // Restore scroll position after render settles
+            if (h.scroll && h.view === 'index') {
+                const contentEl = document.getElementById('content');
+                if (contentEl) {
+                    // Wait for render to populate DOM, then restore
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => { contentEl.scrollTop = h.scroll; });
+                    });
+                }
+            }
         } else if (app.view !== 'index') {
             window.router.go('index', null, false);
         }
@@ -404,9 +435,50 @@ window.ui = {
 
     handleImgError: (el) => {
         el.onerror = null;
-        el.src = 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>';
-        el.classList.add('bg-gray-800');
+
+        // Try to find the animal card this image belongs to
+        const card = el.closest('[data-animal-id]');
+        const animalId = card ? card.getAttribute('data-animal-id') : null;
+
+        // If it's a reference image on a Pokedex card (not a user observation photo),
+        // auto-fetch a real image from iNaturalist
+        if (animalId && typeof dev !== 'undefined' && dev.shuffleImage) {
+            // Show a subtle loading shimmer
+            el.style.opacity = '0.3';
+            el.style.filter = 'grayscale(1)';
+            // Rate-limit: don't refetch if already pending
+            if (!window._imgFetchPending) window._imgFetchPending = new Set();
+            if (!window._imgFetchPending.has(animalId)) {
+                window._imgFetchPending.add(animalId);
+                dev.shuffleImage(animalId, true).then(() => {
+                    window._imgFetchPending.delete(animalId);
+                    el.style.opacity = '';
+                    el.style.filter = '';
+                }).catch(() => {
+                    window._imgFetchPending.delete(animalId);
+                    showPlaceholder();
+                });
+                return; // Don't show placeholder yet — wait for fetch
+            }
+        }
+
+        showPlaceholder();
+
+        function showPlaceholder() {
+            const placeholder = document.createElement('div');
+            placeholder.style.cssText = 'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#111;';
+            placeholder.innerHTML = `
+                <i class="ph ph-image-broken" style="font-size:28px;color:rgba(255,255,255,0.15)"></i>
+                <span style="font-size:9px;color:rgba(255,255,255,0.2);font-weight:600;text-transform:uppercase;letter-spacing:1px;">Aucune photo</span>
+            `;
+            if (el.parentNode) {
+                el.parentNode.style.position = 'relative';
+                el.parentNode.appendChild(placeholder);
+                el.style.display = 'none';
+            }
+        }
     },
+
     showMenu: async (e, id, animalId) => {
         e.preventDefault();
 
@@ -867,11 +939,24 @@ window.toggleSortDir = () => {
 let _searchTimeout = null;
 window.setSearch = (q) => {
     if (_searchTimeout) clearTimeout(_searchTimeout);
+    // Show/hide clear button
+    const clearBtn = document.getElementById('search-clear-btn');
+    if (clearBtn) clearBtn.classList.toggle('hidden', !q);
     _searchTimeout = setTimeout(() => {
         app.searchQuery = q.toLowerCase().trim();
         render();
     }, 300);
 };
+
+window.clearSearch = () => {
+    const input = document.getElementById('search-input');
+    const clearBtn = document.getElementById('search-clear-btn');
+    if (input) { input.value = ''; input.focus(); }
+    if (clearBtn) clearBtn.classList.add('hidden');
+    app.searchQuery = '';
+    render();
+};
+
 
 window.playAudio = (id) => { alert("Audio non disponible pour le moment (Pas de fichier MP3)."); };
 
@@ -1245,8 +1330,12 @@ async function render() {
             // Following user request: flèche vers le bas = du plus petit au plus grand
             const dir = (sortDir === 'desc') ? 1 : -1;
             if (sortKey === 'num') {
-                const nA = parseInt(a.num.replace('#', '')) || 0;
-                const nB = parseInt(b.num.replace('#', '')) || 0;
+                // Custom animals (#C...) always sort after standard database entries
+                const aIsCustom = a.isCustom ? 1 : 0;
+                const bIsCustom = b.isCustom ? 1 : 0;
+                if (aIsCustom !== bIsCustom) return aIsCustom - bIsCustom;
+                const nA = parseInt(a.num.replace(/[^0-9]/g, '')) || 0;
+                const nB = parseInt(b.num.replace(/[^0-9]/g, '')) || 0;
                 return (nA - nB) * dir;
             }
             if (sortKey === 'name') return a.name.localeCompare(b.name) * dir;
@@ -1273,44 +1362,58 @@ async function render() {
         // --- PAGINATION (Append-Only) ---
         const PAGE_SIZE = 60;
         const listKey = `${l.length}-${app.filter}-${app.pokedexSort}-${app.sortDir}-${app.onlyUnlocked}-${app.searchQuery}-${app.mode}`;
-        const isNewContext = !window._pageState || window._pageState.key !== listKey || window._lastRenderedView !== 'index';
+        // Always rebuild if we weren't just on the index page — the detail view also
+        // contains a div.grid (photos) that fools a querySelector('.grid') check.
+        const wasOnIndex = window._lastRenderedView === 'index';
+        const sameKey = window._pageState && window._pageState.key === listKey;
+        const isNewContext = !sameKey || !wasOnIndex;
         window._lastRenderedView = 'index';
+
         if (isNewContext) {
-            window._pageState = { key: listKey, page: 1, rendered: 0 };
+            // Preserve the page number when returning from detail so the user
+            // sees all cards they had loaded, not just the first 60.
+            const savedPage = (!wasOnIndex && sameKey && window._pageState.page > 1)
+                ? window._pageState.page : 1;
+            window._pageState = { key: listKey, page: savedPage, rendered: 0 };
         }
 
         const alreadyRendered = window._pageState.rendered;
-        const upTo = window._pageState.page * PAGE_SIZE;
+        const upTo = Math.min(window._pageState.page * PAGE_SIZE, l.length);
         const newItems = l.slice(alreadyRendered, upTo);
         const hasMore = upTo < l.length;
 
-        // Only rebuild the DOM on fresh context — otherwise just append
+        // Rebuild DOM on new context, otherwise append
         let grid;
         if (isNewContext) {
-            c.innerHTML = '<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div><div id="load-more-wrapper" class="flex justify-center py-8 pb-20"></div>';
+            c.innerHTML = '<div id="index-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div><div id="load-more-wrapper" class="flex justify-center py-8 pb-20"></div>';
         }
-        grid = c.querySelector('.grid');
+        grid = c.querySelector('#index-grid');
+
 
         const makeCard = (a, idx) => {
             const discovered = u.has(a.id);
             const coverObs = covers.get(a.id);
             const imgSrc = coverObs ? (coverObs.thumbnailSrc || coverObs.imageSrc) : a.imgRef;
             const objPos = (coverObs || !a.objectPosition) ? '' : `style="object-position: ${a.objectPosition}"`;
-            const stars = '★'.repeat(a.stats.rarity) + '☆'.repeat(Math.max(0, 5 - a.stats.rarity));
+            const customBadge = a.isCustom
+                ? `<div class="absolute top-1 left-1 bg-brand-accent/20 border border-brand-accent/40 backdrop-blur-sm px-1.5 py-0.5 rounded text-[9px] text-brand-accent font-bold uppercase tracking-wider">✦ Custom</div>`
+                : '';
             return `<div onclick="window.handleCardClick(event, '${a.id}')" oncontextmenu="window.ui.showMenu(event, null, '${a.id}')"
                             data-animal-id="${a.id}"
                             class="aspect-[3/4] bg-gray-900 rounded-lg overflow-hidden relative cursor-pointer border ${discovered ? 'border-brand-accent' : 'border-white/5'} card-hover animate-reveal"
                             style="animation-delay: ${idx % 8 * 40}ms">
                             <img src="${imgSrc}" ${objPos} onerror="window.ui.handleImgError(this)" loading="lazy" class="img-fit ${discovered ? '' : 'grayscale opacity-50'}">
+                                ${customBadge}
                                 <div class="absolute top-1 right-1 bg-black/60 px-1.5 py-0.5 rounded text-[10px] text-brand-gold font-bold">R${a.stats.rarity}</div>
                                 <div class="absolute bottom-0 inset-x-0 p-2 text-xs font-bold text-white bg-black/50 truncate">${a.name}</div>
                         </div>`;
         };
 
+        const totalNewItems = newItems.length;
         const htmlChunks = newItems.map((a, i) => makeCard(a, alreadyRendered + i));
-        renderInChunks(grid, htmlChunks, 100, (renderedCount) => {
-            // Only update rendered state when chunks actually finish
-            window._pageState.rendered = alreadyRendered + renderedCount;
+        renderInChunks(grid, htmlChunks, 100, () => {
+            // Update rendered count by the actual number of new items appended
+            window._pageState.rendered = alreadyRendered + totalNewItems;
         });
 
         // Load more button — always in its own div outside the grid
@@ -1425,7 +1528,7 @@ async function render() {
             document.getElementById('page-title').innerText = a.name;
             c.innerHTML = `
                         <div id="detail-content-id" data-id="${a.id}" class="max-w-6xl mx-auto pb-24 space-y-8">
-                            <button onclick="window.router.go(window._lastView || 'index')" class="text-xs font-bold text-gray-400 hover:text-white uppercase flex items-center gap-2"><i class="ph-bold ph-arrow-left"></i> Retour</button>
+                            <button onclick="window.router.back()" class="text-xs font-bold text-gray-400 hover:text-white uppercase flex items-center gap-2"><i class="ph-bold ph-arrow-left"></i> Retour</button>
                             <div class="glass-panel p-8 rounded-2xl flex flex-col md:flex-row gap-8 items-start">
                                 <div oncontextmenu="window.ui.showMenu(event, null, '${a.id}')" class="aspect-[3/4] w-full md:w-64 bg-black rounded-xl overflow-hidden relative border border-white/10 shrink-0">
                                     <img id="detail-main-img" src="${covers.has(a.id) ? (covers.get(a.id).thumbnailSrc || covers.get(a.id).imageSrc) : a.imgRef}"
@@ -1438,6 +1541,7 @@ async function render() {
                                     <div class="flex justify-between items-start">
                                         <div><h1 class="text-4xl font-extrabold flex items-center gap-3">${a.name} <button onclick="playAudio('${a.id}')" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-brand-accent hover:!bg-white hover:scale-110 transition-all"><i class="ph-fill ph-speaker-high text-xl"></i></button></h1></div>
                                         <div class="flex items-center gap-2">
+                                            ${a.isCustom ? `<div class="text-xs font-bold px-3 py-1 rounded-full bg-brand-accent/20 border border-brand-accent/40 text-brand-accent">✦ Custom</div>` : ''}
                                             <div class="text-xs font-bold px-3 py-1 rounded-full bg-brand-gold text-black">Rareté ${a.stats.rarity}/10</div>
                                         </div>
                                     </div>
@@ -1593,12 +1697,16 @@ async function render() {
 
             badges.push({
                 title: `Explorateur - ${label}`,
-                subtitle: currentTier.t === 0 ? 'Non classé' : currentTier.l,
+                subtitle: currentTier.t === 0 ? 'Aucun badge' : currentTier.l,
                 desc: isMax ? `Vous avez photographié toutes les espèces !` : `Trouvez ${target} espèces de ${label} pour le rang ${nextTier.l}.`,
                 icon: 'ph-compass',
                 color: currentTier.c,
                 progress: found,
                 target: target,
+                totalInDb: totalInDb,
+                type: t,
+                label: label,
+                tiers: tiersExpl,
                 unlocked: currentTier.t !== 0 || isMax
             });
 
@@ -1658,26 +1766,34 @@ async function render() {
 
 
 
-        const htmlChunks = badges.map((b, i) => `
-                        <div class="bg-gray-900 border ${b.unlocked ? 'border-brand-accent/50 box-shadow-brand' : 'border-white/5'} rounded-xl p-4 flex items-center gap-4 relative overflow-hidden group">
-                            <div class="w-14 h-14 rounded-full ${b.unlocked ? '!bg-white' : 'bg-black/50'} flex items-center justify-center shrink-0 border border-white/5 relative">
-                                ${b.unlocked ? `<div class="absolute inset-0 rounded-full bg-current opacity-10 ${b.color}"></div>` : ''}
+        const htmlChunks = badges.map((b, i) => {
+            const badgeJson = JSON.stringify(b).replace(/"/g, '&quot;');
+            const subtitleStyle = b.unlocked
+                ? `color: inherit; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);`
+                : `color: #6b7280; background: #1f2937; border: 1px solid rgba(255,255,255,0.05);`;
+            return `
+                        <div onclick="window.openBadgeModal(${i})" data-badge-idx="${i}" class="bg-gray-900 border ${b.unlocked ? 'border-brand-accent/50 box-shadow-brand' : 'border-white/5'} rounded-xl p-4 flex items-center gap-4 relative overflow-hidden group cursor-pointer card-hover">
+                            <div class="w-14 h-14 rounded-full ${b.unlocked ? 'bg-white/10' : 'bg-gray-800/60'} flex items-center justify-center shrink-0 border ${b.unlocked ? 'border-white/20' : 'border-white/5'} relative">
+                                ${b.unlocked ? `<div class="absolute inset-0 rounded-full opacity-20 ${b.color}" style="background:currentColor"></div>` : ''}
                                 <i class="ph-fill ${b.icon} text-3xl ${b.unlocked ? b.color : 'text-gray-700'}"></i>
                             </div>
                             <div class="flex-1 z-10">
                                 <div class="flex justify-between items-start">
                                     <h4 class="font-bold text-sm ${b.unlocked ? 'text-white' : 'text-gray-500'}">${b.title}</h4>
-                                    <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded !bg-white ${b.unlocked ? b.color : 'text-gray-600'}">${b.subtitle}</span>
+                                    <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded ${b.unlocked ? b.color : ''}" style="${subtitleStyle}">${b.subtitle}</span>
                                 </div>
                                 <p class="text-[10px] text-gray-400 mb-2 mt-1">${b.desc}</p>
-                                <div class="h-1.5 w-full bg-black rounded-full overflow-hidden border border-white/5">
-                                    <div class="h-full ${b.unlocked ? 'bg-brand-accent' : 'bg-gray-700'}" style="width: ${Math.min(100, (b.progress / b.target) * 100)}%"></div>
+                                <div class="h-1.5 w-full bg-black/60 rounded-full overflow-hidden border border-white/5">
+                                    <div class="h-full transition-all duration-700 ${b.unlocked ? 'bg-brand-accent' : 'bg-gray-700'}" style="width: ${Math.min(100, b.target > 0 ? (b.progress / b.target) * 100 : 0)}%"></div>
                                 </div>
                                 <div class="text-[10px] text-right mt-1 text-gray-500 font-mono">${b.progress} / ${b.target}</div>
                             </div>
-                            ${b.unlocked ? '<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-700 animate-shine"></div>' : ''}
+                            ${b.unlocked ? '<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>' : ''}
                         </div>
-                        `);
+                        `;
+        });
+
+        window._currentBadges = badges;
 
         if (badges.length === 0) {
             grid.innerHTML = '<div class="col-span-3 text-center text-gray-500 py-20">Commencez à prendre des photos pour débloquer des badges !</div>';
@@ -1761,7 +1877,90 @@ async function render() {
     }
 }
 
-// Initial Theme Load
+// ── BADGE MODAL ──────────────────────────────────────────────────────────────
+window.openBadgeModal = (idx) => {
+    const b = window._currentBadges && window._currentBadges[idx];
+    if (!b) return;
+
+    const modal = document.getElementById('badge-modal');
+    if (!modal) return;
+
+    const tierDefs = [
+        { t: 0,     l: 'Aucun badge', icon: '—',  color: '#6b7280', bg: '#1f2937' },
+        { t: 5,     l: 'Bronze',      icon: '🥉', color: '#b45309', bg: 'rgba(180,83,9,0.15)' },
+        { t: 10,    l: 'Argent',      icon: '🥈', color: '#9ca3af', bg: 'rgba(156,163,175,0.15)' },
+        { t: 25,    l: 'Or',          icon: '🥇', color: '#eab308', bg: 'rgba(234,179,8,0.15)' },
+        { t: 'ALL', l: 'Diamant',     icon: '💎', color: '#22d3ee', bg: 'rgba(34,211,238,0.15)' },
+    ];
+    const totalInDb = b.totalInDb || 0;
+    const found = b.progress;
+
+    // Determine which tier the user is at
+    let currentTierIdx = 0;
+    if (found >= totalInDb && totalInDb > 0) {
+        currentTierIdx = 4;
+    } else {
+        for (let i = 0; i < 4; i++) {
+            if (tierDefs[i].t !== 'ALL' && found >= tierDefs[i].t) currentTierIdx = i;
+        }
+    }
+    const currentTierDef = tierDefs[currentTierIdx];
+
+    // Build tiers HTML
+    const tiersHtml = tierDefs.map((tier, i) => {
+        const thresholdVal = tier.t === 'ALL' ? totalInDb : tier.t;
+        const isReached = (tier.t === 'ALL') ? (found >= totalInDb && totalInDb > 0) : (found >= tier.t && tier.t > 0);
+        const isCurrent = i === currentTierIdx;
+        const isNext = i === currentTierIdx + 1;
+        const pct = tier.t === 0 ? 0 : Math.min(100, (found / thresholdVal) * 100);
+        
+        return `
+            <div class="flex items-center gap-3 p-3 rounded-xl border transition-all ${isCurrent ? 'border-white/20 bg-white/5' : 'border-white/5 bg-black/20'} ${isNext ? 'ring-1 ring-brand-accent/30' : ''}">
+                <div class="text-2xl w-8 text-center">${tier.icon}</div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold" style="color: ${isReached || isCurrent ? tier.color : '#6b7280'}">${tier.l}</span>
+                        <span class="text-[10px] font-mono text-gray-500">${tier.t === 0 ? 'Départ' : (tier.t === 'ALL' ? totalInDb + ' espèces' : tier.t + ' espèces')}</span>
+                    </div>
+                    ${tier.t !== 0 ? `
+                    <div class="h-1 w-full bg-black/60 rounded-full overflow-hidden border border-white/5">
+                        <div class="h-full rounded-full transition-all duration-700" style="width: ${pct}%; background: ${tier.color}; opacity: ${isReached ? '1' : '0.4'}"></div>
+                    </div>` : ''}
+                </div>
+                ${isReached ? `<i class="ph-fill ph-check-circle text-lg" style="color: ${tier.color}"></i>` : ''}
+                ${isCurrent && !isReached ? '<div class="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></div>' : ''}
+            </div>
+        `;
+    }).join('');
+
+    document.getElementById('badge-modal-title').textContent = b.title;
+    document.getElementById('badge-modal-rank').textContent = currentTierDef.l;
+    document.getElementById('badge-modal-rank').style.color = currentTierDef.color;
+    document.getElementById('badge-modal-rank').style.borderColor = currentTierDef.color + '44';
+    document.getElementById('badge-modal-rank').style.background = currentTierDef.bg;
+    document.getElementById('badge-modal-desc').textContent = b.desc;
+    document.getElementById('badge-modal-progress').textContent = `${found} / ${totalInDb} espèces de ${b.label}`;
+    document.getElementById('badge-modal-tiers').innerHTML = tiersHtml;
+
+    // Overall progress bar
+    const overallPct = totalInDb > 0 ? Math.min(100, (found / totalInDb) * 100) : 0;
+    document.getElementById('badge-modal-bar').style.width = overallPct + '%';
+    document.getElementById('badge-modal-bar').style.background = currentTierDef.color;
+
+    modal.classList.remove('badge-modal-hidden');
+    requestAnimationFrame(() => {
+        modal.classList.add('badge-modal-visible');
+    });
+};
+
+window.closeBadgeModal = () => {
+    const modal = document.getElementById('badge-modal');
+    if (!modal) return;
+    modal.classList.remove('badge-modal-visible');
+    setTimeout(() => modal.classList.add('badge-modal-hidden'), 250);
+};
+
+
 const savedTheme = localStorage.getItem('pokedex-theme') || '#4FD1C5';
 ui.updateTheme(savedTheme);
 const themePicker = document.getElementById('theme-picker');
@@ -1779,35 +1978,127 @@ try {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// DÉMARRAGE — Écran de chargement + pré-chauffe des caches IDB
-// Tous les onglets seront instantanés dès le premier clic.
+// CUSTOM ANIMAL MANAGER — animaux créés localement, stockés en IDB
+// Survivent aux mises à jour de database.js et sont isolés par machine
 // ══════════════════════════════════════════════════════════════════
+window.customAnimalManager = {
+
+    open: () => {
+        const modal = document.getElementById('custom-animal-modal');
+        if (!modal) return;
+        // Reset form
+        document.getElementById('ca-name').value = '';
+        document.getElementById('ca-type').value = 'mammal';
+        document.getElementById('ca-sciname').value = '';
+        document.getElementById('ca-engname').value = '';
+        document.getElementById('ca-weight').value = '';
+        document.getElementById('ca-size').value = '';
+        document.getElementById('ca-habitat').value = '';
+        document.getElementById('ca-rarity').value = '3';
+        document.getElementById('ca-rarity-display').textContent = '3';
+        document.getElementById('ca-desc').value = '';
+        document.getElementById('ca-tips-finding').value = '';
+        document.getElementById('ca-tips-photo').value = '';
+        document.getElementById('ca-error').textContent = '';
+        modal.classList.remove('hidden');
+    },
+
+    close: () => {
+        const modal = document.getElementById('custom-animal-modal');
+        if (modal) modal.classList.add('hidden');
+    },
+
+    save: async () => {
+        const name = document.getElementById('ca-name').value.trim();
+        if (!name) {
+            document.getElementById('ca-error').textContent = '⚠ Le nom est obligatoire.';
+            return;
+        }
+        // Check for duplicate name in DB
+        if (window.DB.find(a => a.name.toLowerCase() === name.toLowerCase())) {
+            document.getElementById('ca-error').textContent = `⚠ "${name}" existe déjà dans le Pokedex.`;
+            return;
+        }
+        const rarity = parseInt(document.getElementById('ca-rarity').value) || 3;
+        const newAnimal = {
+            name,
+            type: document.getElementById('ca-type').value,
+            scientificName: document.getElementById('ca-sciname').value.trim(),
+            englishName: document.getElementById('ca-engname').value.trim(),
+            imgRef: '',
+            objectPosition: 'center',
+            stats: {
+                weight: document.getElementById('ca-weight').value.trim(),
+                size: document.getElementById('ca-size').value.trim(),
+                habitat: document.getElementById('ca-habitat').value.trim(),
+                rarity
+            },
+            desc: document.getElementById('ca-desc').value.trim(),
+            tips: {
+                finding: document.getElementById('ca-tips-finding').value.trim(),
+                photo: document.getElementById('ca-tips-photo').value.trim()
+            },
+            isCustom: true,
+            createdAt: new Date().toISOString()
+        };
+
+        try {
+            const insertedId = await db.customAnimals.add(newAnimal);
+            // Assign a unique dex ID so it works with observations
+            const dexId = 'custom_' + insertedId;
+            newAnimal.id = dexId;
+            newAnimal.num = '#C' + String(insertedId).padStart(4, '0');
+            await db.customAnimals.update(insertedId, { dexId, id: dexId, num: newAnimal.num });
+
+            // Inject into live window.DB so everything works instantly
+            window.DB.push(newAnimal);
+
+            // Update datalist
+            const datalist = document.getElementById('all-animals-list');
+            if (datalist) {
+                const opt = document.createElement('option');
+                opt.value = name;
+                datalist.appendChild(opt);
+            }
+
+            // Ferme le modal, reste sur la vue courante (pas de changement de app.view).
+            // _importerPreset transmet le nom à batch.addFiles() pour le pré-remplissage.
+            customAnimalManager.close();
+            window._importerPreset = name;
+            render();
+            ui.openImporter();
+
+        } catch (err) {
+            console.error('Custom animal save failed:', err);
+            document.getElementById('ca-error').textContent = '⚠ Erreur lors de la sauvegarde : ' + err.message;
+        }
+    }
+};
+
 (async () => {
-    // Injecter le splash screen par-dessus l'app
-    const splash = document.createElement('div');
-    splash.id = 'splash-screen';
-    splash.style.cssText = `
-                                position: fixed; inset: 0; z-index: 9999;
-                                background: #0f0f11;
-                                display: flex; flex-direction: column;
-                                align-items: center; justify-content: center;
-                                gap: 24px;
-                                transition: opacity 0.5s ease;
-                            `;
-    splash.innerHTML = `
-                                <div style="text-align:center; margin-bottom: 8px;">
-                                    <div style="font-size: 48px; margin-bottom: 12px;">🦎</div>
-                                    <div style="font-size: 22px; font-weight: 900; color: white; letter-spacing: -0.5px;">LumenDex</div>
-                                    <div style="font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 4px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Chargement de la collection…</div>
-                                </div>
-                                <div style="width: 240px;">
-                                    <div style="width: 100%; height: 3px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden;">
-                                        <div id="splash-bar" style="height: 100%; background: var(--brand-accent, #4FD1C5); border-radius: 99px; transition: width 0.3s ease; width: 0%;"></div>
-                                    </div>
-                                    <div id="splash-label" style="font-size: 11px; color: rgba(255,255,255,0.25); text-align: center; margin-top: 10px; font-weight: 600;"></div>
-                                </div>
-                            `;
-    document.body.appendChild(splash);
+    // Le splash est déjà dans le HTML — on le récupère directement
+    const splash = document.getElementById('splash-screen');
+
+    // 🐾 Cycling animal emojis
+    const _animalEmojis = ['🦎','🦁','🐘','🦅','🐺','🦊','🐬','🦋','🐊','🦉','🐆','🦈','🦜','🐻','🦧','🐙','🦩','🐢','🦌','🦚','🐋','🦑','🦏','🦟','🐦','🦔','🐠','🦞','🦢','🐸','🦬','🐊','🦤','🦓','🐡','🦭','🐓','🪶','🦗','🐪'];
+    // Shuffle once per launch (Fisher-Yates)
+    for (let i = _animalEmojis.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [_animalEmojis[i], _animalEmojis[j]] = [_animalEmojis[j], _animalEmojis[i]];
+    }
+    let _emojiIdx = 0;
+    const _emojiEl = document.getElementById('splash-emoji');
+    const _emojiInterval = setInterval(() => {
+        if (!_emojiEl || !document.body.contains(_emojiEl)) { clearInterval(_emojiInterval); return; }
+        _emojiEl.style.opacity = '0';
+        _emojiEl.style.transform = 'scale(0.7)';
+        setTimeout(() => {
+            _emojiIdx = (_emojiIdx + 1) % _animalEmojis.length;
+            _emojiEl.textContent = _animalEmojis[_emojiIdx];
+            _emojiEl.style.opacity = '1';
+            _emojiEl.style.transform = 'scale(1)';
+        }, 150);
+    }, 500);
 
     const bar = document.getElementById('splash-bar');
     const label = document.getElementById('splash-label');
@@ -1819,6 +2110,29 @@ try {
     const C = window._dbCache;
 
     try {
+        // Étape 0 — Charger les animaux custom depuis IDB et les fusionner dans window.DB
+        step(5, 'Animaux personnalisés…');
+        try {
+            const customArr = await db.customAnimals.toArray();
+            if (customArr.length > 0) {
+                const existingIds = new Set(window.DB.map(a => a.id));
+                customArr.forEach(ca => {
+                    if (ca.dexId && !existingIds.has(ca.dexId)) {
+                        ca.id = ca.dexId;
+                        ca.isCustom = true;
+                        window.DB.push(ca);
+                    }
+                });
+                // Refresh datalist
+                const datalist = document.getElementById('all-animals-list');
+                if (datalist) {
+                    datalist.innerHTML = window.DB.map(a => `<option value="${a.name}">`).join('');
+                }
+            }
+        } catch (e) {
+            console.warn('Custom animals load failed (non-critical):', e);
+        }
+
         // Étape 1 — discoveredIds (Pokedex)
         step(10, 'Pokedex…');
         const keys = await db.obs.orderBy('animalId').uniqueKeys();
@@ -1860,6 +2174,7 @@ try {
 
     // Fade out du splash
     await new Promise(r => setTimeout(r, 200));
+    clearInterval(_emojiInterval);
     splash.style.opacity = '0';
     setTimeout(() => splash.remove(), 520);
 })();

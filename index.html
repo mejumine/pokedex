@@ -49,15 +49,46 @@
 
 <body class="h-screen w-screen flex overflow-hidden text-gray-100 font-sans">
 
+    <!-- SPLASH SCREEN — visible dès le 1er pixel, retiré par app.js -->
+    <div id="splash-screen" style="
+        position: fixed; inset: 0; z-index: 9999;
+        background: #0f0f11;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 24px;
+        transition: opacity 0.5s ease;
+    ">
+        <div style="text-align:center; margin-bottom: 8px;">
+            <div id="splash-emoji" style="font-size: 56px; margin-bottom: 12px; transition: transform 0.15s ease, opacity 0.15s ease;">🦎</div>
+            <div style="font-size: 22px; font-weight: 900; color: white; letter-spacing: -0.5px;">LumenDex</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 4px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Chargement de la collection…</div>
+        </div>
+        <div style="width: 240px;">
+            <div style="width: 100%; height: 3px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden;">
+                <div id="splash-bar" style="height: 100%; background: var(--brand-accent, #4FD1C5); border-radius: 99px; transition: width 0.3s ease; width: 0%;"></div>
+            </div>
+            <div id="splash-label" style="font-size: 11px; color: rgba(255,255,255,0.25); text-align: center; margin-top: 10px; font-weight: 600;"></div>
+        </div>
+    </div>
+
     <datalist id="all-animals-list"></datalist>
 
     <!-- SIDEBAR -->
     <aside class="w-72 h-full glass border-r border-white/5 flex flex-col z-20 shrink-0">
         <!-- LOGO & THEME -->
         <div class="p-8 flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all group lg-shadow"
+            <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all pokeball-btn lg-shadow"
                 onclick="document.getElementById('theme-picker').click()">
-                <i class="ph-fill ph-aperture text-brand-accent text-3xl group-hover:animate-spin" id="logo-icon"></i>
+                <svg id="logo-icon" class="pokeball-svg w-8 h-8" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Outer ring -->
+                    <circle cx="24" cy="24" r="21.5" stroke="var(--brand-accent)" stroke-width="3.2"/>
+                    <!-- Middle bar -->
+                    <line x1="2.5" y1="24" x2="45.5" y2="24" stroke="var(--brand-accent)" stroke-width="3.2"/>
+                    <!-- Center button ring -->
+                    <circle cx="24" cy="24" r="6.5" stroke="var(--brand-accent)" stroke-width="3.2" fill="#0f0f11"/>
+                    <!-- Center button fill -->
+                    <circle cx="24" cy="24" r="3" fill="var(--brand-accent)" opacity="0.85"/>
+                </svg>
             </div>
             <input type="color" id="theme-picker" class="hidden" oninput="ui.updateTheme(this.value)">
             <div>
@@ -94,7 +125,7 @@
             <div class="border-t border-white/5 my-4"></div>
 
             <!-- SELECTION SECTION -->
-            <div class="px-2 space-y-6 pt-4">
+            <div class="px-2 space-y-3 pt-4">
                 <button onclick="app.onlyUnlocked=!app.onlyUnlocked; render()"
                     class="w-full flex items-center justify-between p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all group">
                     <span class="text-xs font-bold text-gray-300 group-hover:text-white">Mes Pokemons</span>
@@ -119,20 +150,24 @@
             </div>
 
             <!-- GAP -->
-            <div class="flex-1 min-h-[40px]"></div>
+            <div class="flex-1 min-h-0"></div>
 
-            <!-- ACTION BUTTONS -->
-            <div class="pt-4 space-y-1 pb-8">
+            <!-- ACTION BUTTONS (utilitaires) -->
+            <div class="pt-2 space-y-0.5 pb-2">
+                <button onclick="customAnimalManager.open()"
+                    class="nav-btn action-btn w-full px-2 py-1.5 rounded-xl text-left text-gray-500 flex items-center gap-3 hover:text-white text-xs font-bold transition-all">
+                    <i class="ph ph-plus-circle"></i> Créer un animal
+                </button>
                 <button onclick="ui.exportData()"
-                    class="nav-btn action-btn w-full p-2 rounded-xl text-left text-gray-500 flex items-center gap-3 hover:text-white text-xs font-bold transition-all">
+                    class="nav-btn action-btn w-full px-2 py-1.5 rounded-xl text-left text-gray-500 flex items-center gap-3 hover:text-white text-xs font-bold transition-all">
                     <i class="ph ph-file-arrow-up"></i> Sauvegarder
                 </button>
                 <button onclick="ui.importData()"
-                    class="nav-btn action-btn w-full p-2 rounded-xl text-left text-gray-500 flex items-center gap-3 hover:text-white text-xs font-bold transition-all">
+                    class="nav-btn action-btn w-full px-2 py-1.5 rounded-xl text-left text-gray-500 flex items-center gap-3 hover:text-white text-xs font-bold transition-all">
                     <i class="ph ph-file-arrow-down"></i> Charger une sauvegarde
                 </button>
                 <button onclick="ui.resetData()"
-                    class="nav-btn action-btn w-full p-2 rounded-xl text-left text-red-900/30 flex items-center gap-3 hover:text-red-500 text-[10px] font-bold transition-all">
+                    class="nav-btn action-btn w-full px-2 py-1.5 rounded-xl text-left text-red-900/30 flex items-center gap-3 hover:text-red-500 text-[10px] font-bold transition-all">
                     <i class="ph-bold ph-trash"></i> Effacer les données
                 </button>
             </div>
@@ -162,10 +197,16 @@
                     <h2 id="page-title" class="text-2xl font-outfit font-bold whitespace-nowrap">Pokedex</h2>
                     <div class="relative group">
                         <i
-                            class="ph-bold ph-magnifying-glass absolute left-3 top-1.5 text-gray-500 group-focus-within:text-brand-accent"></i>
+                            class="ph-bold ph-magnifying-glass absolute left-3 top-1.5 text-gray-500 group-focus-within:text-brand-accent z-10"></i>
                         <input type="text" id="search-input" oninput="window.setSearch(this.value)"
                             placeholder="Rechercher..."
-                            class="bg-black/30 border border-white/10 rounded-full pl-9 pr-4 py-1.5 text-sm w-48 focus:w-64 focus:bg-black/50 focus:border-brand-accent transition-all outline-none text-white">
+                            class="bg-black/30 border border-white/10 rounded-full pl-9 pr-8 py-1.5 text-sm w-48 focus:w-64 focus:bg-black/50 focus:border-brand-accent transition-all outline-none text-white">
+                        <button id="search-clear-btn"
+                            onclick="window.clearSearch()"
+                            class="absolute right-2.5 top-1.5 text-gray-500 hover:text-white transition-colors hidden"
+                            title="Effacer la recherche">
+                            <i class="ph-bold ph-x text-xs"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="flex gap-3 items-center">
@@ -352,6 +393,175 @@
                     class="w-12 h-12 border-4 border-brand-accent/20 border-t-brand-accent rounded-full animate-spin mb-4">
                 </div>
                 <p class="text-sm font-bold text-gray-400">Génération de la miniature...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- BADGE MODAL -->
+    <div id="badge-modal" class="badge-modal-hidden fixed inset-0 z-[90] flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="window.closeBadgeModal()"></div>
+        <!-- Panel -->
+        <div class="relative z-10 w-full max-w-sm bg-[#111] border border-white/10 rounded-2xl shadow-2xl overflow-hidden badge-modal-panel">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-5 pt-5 pb-3 border-b border-white/5">
+                <div>
+                    <h3 id="badge-modal-title" class="font-bold text-base text-white font-outfit"></h3>
+                    <p id="badge-modal-desc" class="text-[11px] text-gray-400 mt-0.5 leading-snug"></p>
+                </div>
+                <button onclick="window.closeBadgeModal()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all shrink-0 ml-3">
+                    <i class="ph ph-x text-sm"></i>
+                </button>
+            </div>
+            <!-- Rank + Progress -->
+            <div class="px-5 pt-4 pb-3">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Rang actuel</span>
+                    <span id="badge-modal-rank" class="text-xs font-bold uppercase px-3 py-1 rounded-full border"></span>
+                </div>
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] text-gray-500 font-bold">Progression globale</span>
+                    <span id="badge-modal-progress" class="text-[10px] font-mono text-gray-400"></span>
+                </div>
+                <div class="h-2 w-full bg-black/60 rounded-full overflow-hidden border border-white/5">
+                    <div id="badge-modal-bar" class="h-full rounded-full transition-all duration-700" style="width: 0%"></div>
+                </div>
+            </div>
+            <!-- Tiers -->
+            <div class="px-5 pb-5 space-y-2">
+                <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-2">Paliers</div>
+                <div id="badge-modal-tiers" class="space-y-1.5"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- CUSTOM ANIMAL MODAL -->
+    <div id="custom-animal-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="customAnimalManager.close()"></div>
+        <!-- Panel -->
+        <div class="relative z-10 w-full max-w-2xl bg-[#111] border border-white/10 rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-5 border-b border-white/5 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-brand-accent/10 border border-brand-accent/20 flex items-center justify-center">
+                        <i class="ph-fill ph-paw-print text-brand-accent text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white font-outfit text-base">Créer un animal</h3>
+                        <p class="text-[10px] text-gray-500">Stocké localement · survivra aux mises à jour</p>
+                    </div>
+                </div>
+                <button onclick="customAnimalManager.close()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all">
+                    <i class="ph ph-x text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="overflow-y-auto p-6 space-y-5 flex-1 hide-scroll">
+
+                <!-- Nom + Type -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Nom <span class="text-red-400">*</span></label>
+                        <input id="ca-name" type="text" placeholder="ex: Coypu, Nutria..."
+                            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:border-brand-accent focus:outline-none transition-colors">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Catégorie</label>
+                        <select id="ca-type" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:border-brand-accent focus:outline-none transition-colors">
+                            <option value="mammal">🦁 Mammifère</option>
+                            <option value="bird">🦅 Oiseau</option>
+                            <option value="reptile">🐊 Reptile</option>
+                            <option value="amphibian">🐸 Amphibien</option>
+                            <option value="fish">🐟 Poisson</option>
+                            <option value="insect">🦋 Insecte</option>
+                            <option value="aquatic">🐬 Aquatique</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Nom scientifique + anglais -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Nom scientifique</label>
+                        <input id="ca-sciname" type="text" placeholder="Myocastor coypus"
+                            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 font-mono focus:border-brand-accent focus:outline-none transition-colors">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Nom anglais</label>
+                        <input id="ca-engname" type="text" placeholder="Nutria"
+                            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:border-brand-accent focus:outline-none transition-colors">
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Poids</label>
+                        <input id="ca-weight" type="text" placeholder="ex: 5-10 kg"
+                            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:border-brand-accent focus:outline-none transition-colors">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Taille</label>
+                        <input id="ca-size" type="text" placeholder="ex: 40-70 cm"
+                            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:border-brand-accent focus:outline-none transition-colors">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Habitat</label>
+                        <input id="ca-habitat" type="text" placeholder="ex: Zones humides"
+                            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:border-brand-accent focus:outline-none transition-colors">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Rareté <span id="ca-rarity-display" class="text-brand-accent">3</span>/10</label>
+                        <input id="ca-rarity" type="range" min="1" max="10" value="3"
+                            oninput="document.getElementById('ca-rarity-display').textContent = this.value"
+                            class="w-full accent-[var(--brand-accent)] h-2 cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="space-y-1.5">
+                    <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Description</label>
+                    <textarea id="ca-desc" rows="4" placeholder="Décrivez l'animal, ses comportements, ses particularités..."
+                        class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:border-brand-accent focus:outline-none transition-colors resize-none"></textarea>
+                </div>
+
+                <!-- Tips (optionnel, collapsible) -->
+                <details class="group">
+                    <summary class="text-[10px] uppercase font-bold text-gray-500 tracking-widest cursor-pointer hover:text-gray-300 transition-colors list-none flex items-center gap-2">
+                        <i class="ph ph-caret-right group-open:rotate-90 transition-transform"></i>
+                        Conseils (optionnel)
+                    </summary>
+                    <div class="mt-3 space-y-3">
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Où le trouver ?</label>
+                            <textarea id="ca-tips-finding" rows="2" placeholder="Habitat, saison, heures d'observation..."
+                                class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:border-brand-accent focus:outline-none transition-colors resize-none"></textarea>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Technique photo</label>
+                            <textarea id="ca-tips-photo" rows="2" placeholder="Focale recommandée, lumière, distance..."
+                                class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:border-brand-accent focus:outline-none transition-colors resize-none"></textarea>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Error -->
+                <p id="ca-error" class="text-red-400 text-xs font-bold min-h-[1rem]"></p>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-6 py-4 border-t border-white/5 flex justify-end gap-3 shrink-0">
+                <button onclick="customAnimalManager.close()"
+                    class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-400 hover:text-white transition-colors">
+                    Annuler
+                </button>
+                <button onclick="customAnimalManager.save()"
+                    class="px-6 py-2.5 rounded-xl text-sm bg-brand-accent text-black font-bold hover:opacity-90 active:scale-95 transition-all flex items-center gap-2">
+                    <i class="ph-bold ph-arrow-right"></i> Créer &amp; importer mes photos
+                </button>
             </div>
         </div>
     </div>

@@ -319,4 +319,47 @@
     box-shadow: 0 0 20px rgba(79, 209, 197, 0.2);
 }
 
-    
+/* Badge Modal Animation */
+#badge-modal {
+    transition: opacity 0.25s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+#badge-modal.badge-modal-hidden {
+    display: none !important;
+}
+#badge-modal.badge-modal-visible {
+    opacity: 1;
+    pointer-events: all;
+}
+.badge-modal-panel {
+    transform: scale(0.94) translateY(8px);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+    opacity: 0;
+}
+.badge-modal-visible .badge-modal-panel {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* ── POKÉBALL LOGO ──────────────────────────────────────────────────────── */
+.pokeball-btn {
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.pokeball-btn:hover {
+    transform: scale(1.06);
+}
+.pokeball-btn:active {
+    transform: scale(0.94);
+}
+
+@keyframes pokeball-spin {
+    0%   { transform: rotate(0deg); }
+    70%  { transform: rotate(375deg); }
+    85%  { transform: rotate(355deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.pokeball-btn:hover .pokeball-svg {
+    animation: pokeball-spin 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
